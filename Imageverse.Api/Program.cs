@@ -13,7 +13,7 @@ namespace Imageverse.Api
                 builder.Services.AddSwaggerGen();
                 builder.Services
                     .AddAplication()
-                    .AddInfrastructure();
+                    .AddInfrastructure(builder.Configuration);
             }
 
             var app = builder.Build();
