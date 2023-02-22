@@ -1,3 +1,6 @@
+using Imageverse.Application;
+using Imageverse.Infrastructure;
+
 namespace Imageverse.Api
 {
     public class Program
@@ -7,16 +10,18 @@ namespace Imageverse.Api
             var builder = WebApplication.CreateBuilder(args);
             {
                 builder.Services.AddControllers();
-                builder.Services.AddEndpointsApiExplorer();
                 builder.Services.AddSwaggerGen();
+                builder.Services
+                    .AddAplication()
+                    .AddInfrastructure();
             }
 
             var app = builder.Build();
             {
                 if (app.Environment.IsDevelopment())
                 {
-                    app.UseSwagger();
-                    app.UseSwaggerUI();
+                    app.UseSwagger()
+                       .UseSwaggerUI();
                 }
                 app.UseHttpsRedirection();
                 app.MapControllers();
