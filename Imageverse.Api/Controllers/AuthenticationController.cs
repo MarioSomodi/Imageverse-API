@@ -26,15 +26,15 @@ namespace Imageverse.Api.Controllers
                 registerRequest.Email,
                 registerRequest.ProfileImage,
                 registerRequest.Password);
-            AuthenticationResponse authenticationResponse = new AuthenticationResponse
+            AuthenticationResponse authenticationResponse = new()
             {
-                Id = authenticationResult.Id,
-                PackageId = authenticationResult.PackageId,
-                Username = authenticationResult.Username,
-                Name = authenticationResult.Name,
-                Surname = authenticationResult.Surname,
-                Email = authenticationResult.Email,
-                ProfileImage = authenticationResult.ProfileImage,
+                Id = authenticationResult.User.Id,
+                PackageId = authenticationResult.User.PackageId,
+                Username = authenticationResult.User.Username,
+                Name = authenticationResult.User.Name,
+                Surname = authenticationResult.User.Surname,
+                Email = authenticationResult.User.Email,
+                ProfileImage = authenticationResult.User.ProfileImage,
                 Token = authenticationResult.Token
             };
             return Ok(authenticationResponse);
@@ -44,15 +44,15 @@ namespace Imageverse.Api.Controllers
         public ActionResult Login(LoginRequest loginRequest)
         {
             AuthenticationResult authenticationResult = _authenticationService.Login(loginRequest.Email, loginRequest.Password);
-            AuthenticationResponse authenticationResponse = new AuthenticationResponse
+            AuthenticationResponse authenticationResponse = new()
             {
-                Id = authenticationResult.Id,
-                PackageId = authenticationResult.PackageId,
-                Username = authenticationResult.Username,
-                Name = authenticationResult.Name,
-                Surname = authenticationResult.Surname,
-                Email = authenticationResult.Email,
-                ProfileImage = authenticationResult.ProfileImage,
+                Id = authenticationResult.User.Id,
+                PackageId = authenticationResult.User.PackageId,
+                Username = authenticationResult.User.Username,
+                Name = authenticationResult.User.Name,
+                Surname = authenticationResult.User.Surname,
+                Email = authenticationResult.User.Email,
+                ProfileImage = authenticationResult.User.ProfileImage,
                 Token = authenticationResult.Token
             };
             return Ok(authenticationResponse);

@@ -9,7 +9,7 @@
             string name,
             string surname,
             string email,
-            string profilePicture,
+            string profileImage,
             string password);
     }
 }

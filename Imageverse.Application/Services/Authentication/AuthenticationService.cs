@@ -1,53 +1,60 @@
 ﻿using Imageverse.Application.Common.Interfaces.Authentication;
+using Imageverse.Application.Common.Interfaces.Persistance;
+using Imageverse.Domain.Entities;
 
 namespace Imageverse.Application.Services.Authentication
 {
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly IUserRepository _userRepository;
 
-        public AuthenticationService(IJwtTokenGenerator jwtTokenGenerator)
+        public AuthenticationService(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
+            _userRepository = userRepository;
         }
 
         public AuthenticationResult Login(string email, string password)
         {
-            return new AuthenticationResult
+            if (_userRepository.GetUserByEmail(email) is not User user
+                || user.Password != password)
             {
-                Email = email,
-                Token = "token",
-                Id = 1,
-                Name = "name",
-                PackageId = 1,
-                ProfileImage = "linkToPfp",
-                Surname = "surname",
-                Username = "username"
-            };
+                throw new Exception("Incorrect user credentials.");
+            }
+
+            var token = _jwtTokenGenerator.GenerateToken(user);
+
+            return new AuthenticationResult(
+                user,
+                token);
         }
 
-        public AuthenticationResult Register(int packageId, string username, string name, string surname, string email, string profilePicture, string password)
+        public AuthenticationResult Register(int packageId, string username, string name, string surname, string email, string profileImage, string password)
         {
-            // TODO check if user alredy exists by checking email
-
-            // TODO add user to db and get back the identity auto generated id
-
-            int tempId = 1;
-
-            //Create JWT token
-            var token = _jwtTokenGenerator.GenerateToken(packageId, username, name, surname, email, profilePicture, tempId);
-
-            return new AuthenticationResult
+            if(_userRepository.GetUserByEmail(email) is not null)
             {
-                Username = username,
-                PackageId = packageId,
-                ProfileImage = profilePicture,
-                Surname = surname,
-                Name = name,
+                throw new Exception("User with given email alredy exists.");
+            }
+
+            User user = new()
+            {
                 Email = email,
-                Token = token,
-                Id = 1
+                Name = name,
+                PackageId = packageId,
+                Password = password,
+                ProfileImage = profileImage,
+                Surname = surname,
+                Username = username,
             };
+
+            _userRepository.Add(user);
+
+            var token = _jwtTokenGenerator.GenerateToken(user);
+
+            return new AuthenticationResult(
+                user,
+                token);
         }
     }
 }

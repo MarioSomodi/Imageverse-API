@@ -1,6 +1,8 @@
 ﻿using Imageverse.Application.Common.Interfaces.Authentication;
+using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Infrastructure.Authentication;
+using Imageverse.Infrastructure.Persistance;
 using Imageverse.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +17,9 @@ namespace Imageverse.Infrastructure
 
             services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            
             return services;
         }
     }
