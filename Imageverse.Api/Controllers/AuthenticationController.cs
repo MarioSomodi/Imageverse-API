@@ -1,12 +1,11 @@
-﻿using Imageverse.Application.Services.Authentication;
+﻿using ErrorOr;
+using Imageverse.Application.Services.Authentication;
 using Imageverse.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Imageverse.Api.Controllers
 {
-    [ApiController]
-    [Route("[controller]/[action]")]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : ApiController
     {
         private readonly IAuthenticationService _authenticationService;
 
@@ -16,9 +15,9 @@ namespace Imageverse.Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(RegisterRequest registerRequest)
+        public IActionResult Register(RegisterRequest registerRequest)
         {
-            AuthenticationResult authenticationResult = _authenticationService.Register(
+            ErrorOr<AuthenticationResult> authenticationResult = _authenticationService.Register(
                 registerRequest.PackageId,
                 registerRequest.Username,
                 registerRequest.Name,
@@ -26,36 +25,33 @@ namespace Imageverse.Api.Controllers
                 registerRequest.Email,
                 registerRequest.ProfileImage,
                 registerRequest.Password);
-            AuthenticationResponse authenticationResponse = new()
-            {
-                Id = authenticationResult.User.Id,
-                PackageId = authenticationResult.User.PackageId,
-                Username = authenticationResult.User.Username,
-                Name = authenticationResult.User.Name,
-                Surname = authenticationResult.User.Surname,
-                Email = authenticationResult.User.Email,
-                ProfileImage = authenticationResult.User.ProfileImage,
-                Token = authenticationResult.Token
-            };
-            return Ok(authenticationResponse);
+            return authenticationResult.Match(
+                authenticationResult => Ok(MapToAuthenticationResult(authenticationResult)),
+                errors => Problem(errors));
         }
 
+
         [HttpPost]
-        public ActionResult Login(LoginRequest loginRequest)
+        public IActionResult Login(LoginRequest loginRequest)
         {
-            AuthenticationResult authenticationResult = _authenticationService.Login(loginRequest.Email, loginRequest.Password);
-            AuthenticationResponse authenticationResponse = new()
-            {
-                Id = authenticationResult.User.Id,
-                PackageId = authenticationResult.User.PackageId,
-                Username = authenticationResult.User.Username,
-                Name = authenticationResult.User.Name,
-                Surname = authenticationResult.User.Surname,
-                Email = authenticationResult.User.Email,
-                ProfileImage = authenticationResult.User.ProfileImage,
-                Token = authenticationResult.Token
-            };
-            return Ok(authenticationResponse);
+            ErrorOr<AuthenticationResult> authenticationResult = _authenticationService.Login(loginRequest.Email, loginRequest.Password);
+            return authenticationResult.Match(
+                authenticationResult => Ok(MapToAuthenticationResult(authenticationResult)),
+                errors => Problem(errors));
+        }
+        
+        private static AuthenticationResponse MapToAuthenticationResult(AuthenticationResult authenticationResult)
+        {
+            return new AuthenticationResponse(
+                authenticationResult.User.Id,
+                authenticationResult.User.PackageId,
+                authenticationResult.User.Username,
+                authenticationResult.User.Name,
+                authenticationResult.User.Surname,
+                authenticationResult.User.Email,
+                authenticationResult.User.ProfileImage,
+                authenticationResult.Token
+            );
         }
     }
 }

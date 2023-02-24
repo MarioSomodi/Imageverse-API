@@ -1,5 +1,7 @@
+using Imageverse.Api.Common.Errors;
 using Imageverse.Application;
 using Imageverse.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Imageverse.Api
 {
@@ -11,6 +13,7 @@ namespace Imageverse.Api
             {
                 builder.Services.AddControllers();
                 builder.Services.AddSwaggerGen();
+                builder.Services.AddSingleton<ProblemDetailsFactory, ImageverseProblemDetailsFactory>();
                 builder.Services
                     .AddAplication()
                     .AddInfrastructure(builder.Configuration);
@@ -18,6 +21,7 @@ namespace Imageverse.Api
 
             var app = builder.Build();
             {
+                app.UseExceptionHandler("/Error");
                 if (app.Environment.IsDevelopment())
                 {
                     app.UseSwagger()

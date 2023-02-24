@@ -1,5 +1,7 @@
-﻿using Imageverse.Application.Common.Interfaces.Authentication;
+﻿using ErrorOr;
+using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Persistance;
+using Imageverse.Domain.Common.Errors;
 using Imageverse.Domain.Entities;
 
 namespace Imageverse.Application.Services.Authentication
@@ -15,12 +17,12 @@ namespace Imageverse.Application.Services.Authentication
             _userRepository = userRepository;
         }
 
-        public AuthenticationResult Login(string email, string password)
+        public ErrorOr<AuthenticationResult> Login(string email, string password)
         {
             if (_userRepository.GetUserByEmail(email) is not User user
                 || user.Password != password)
             {
-                throw new Exception("Incorrect user credentials.");
+                return Errors.Authentication.InvalidCredentials;
             }
 
             var token = _jwtTokenGenerator.GenerateToken(user);
@@ -30,11 +32,11 @@ namespace Imageverse.Application.Services.Authentication
                 token);
         }
 
-        public AuthenticationResult Register(int packageId, string username, string name, string surname, string email, string profileImage, string password)
+        public ErrorOr<AuthenticationResult> Register(int packageId, string username, string name, string surname, string email, string profileImage, string password)
         {
             if(_userRepository.GetUserByEmail(email) is not null)
             {
-                throw new Exception("User with given email alredy exists.");
+                return Errors.User.DuplicateEmail;
             }
 
             User user = new()

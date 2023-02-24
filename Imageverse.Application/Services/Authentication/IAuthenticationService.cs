@@ -1,10 +1,12 @@
-﻿namespace Imageverse.Application.Services.Authentication
+﻿using ErrorOr;
+
+namespace Imageverse.Application.Services.Authentication
 {
     public interface IAuthenticationService
     {
-        AuthenticationResult Login(string email,
+        ErrorOr<AuthenticationResult> Login(string email,
             string password);
-        AuthenticationResult Register(int packageId,
+        ErrorOr<AuthenticationResult> Register(int packageId,
             string username,
             string name,
             string surname,
