@@ -6,7 +6,7 @@ namespace Imageverse.Domain.Common.Errors
     {
         public static class Authentication
         {
-            public static Error InvalidCredentials => Error.("User.InvalidCredentials", "Credentials you have entered are invalid.");
+            public static Error InvalidCredentials => Error.Validation("User.InvalidCredentials", "Credentials you have entered are invalid.");
         }
     }
 }
