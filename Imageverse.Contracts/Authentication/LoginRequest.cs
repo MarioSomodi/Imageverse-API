@@ -1,8 +1,6 @@
 ﻿namespace Imageverse.Contracts.Authentication
 {
-    public record LoginRequest
-    (
-        string Email,
+    public record LoginRequest(string Email,
         string Password
     );
 }

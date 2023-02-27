@@ -1,30 +1,35 @@
 ﻿using ErrorOr;
-using Imageverse.Application.Services.Authentication;
+using Imageverse.Application.Authentication.Commands.Register;
+using Imageverse.Application.Authentication.Common;
+using Imageverse.Application.Authentication.Queries.Login;
 using Imageverse.Contracts.Authentication;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Imageverse.Api.Controllers
 {
     public class AuthenticationController : ApiController
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly ISender _mediator;
 
-        public AuthenticationController(IAuthenticationService authenticationService)
+        public AuthenticationController(ISender mediator)
         {
-            _authenticationService = authenticationService;
+            _mediator = mediator;
         }
 
         [HttpPost]
-        public IActionResult Register(RegisterRequest registerRequest)
+        public async Task<IActionResult> Register(RegisterRequest registerRequest)
         {
-            ErrorOr<AuthenticationResult> authenticationResult = _authenticationService.Register(
-                registerRequest.PackageId,
+            RegisterCommand registerCommand = new (registerRequest.PackageId,
                 registerRequest.Username,
                 registerRequest.Name,
                 registerRequest.Surname,
                 registerRequest.Email,
                 registerRequest.ProfileImage,
                 registerRequest.Password);
+            
+            ErrorOr<AuthenticationResult> authenticationResult = await _mediator.Send(registerCommand);
+         
             return authenticationResult.Match(
                 authenticationResult => Ok(MapToAuthenticationResult(authenticationResult)),
                 errors => Problem(errors));
@@ -32,9 +37,12 @@ namespace Imageverse.Api.Controllers
 
 
         [HttpPost]
-        public IActionResult Login(LoginRequest loginRequest)
+        public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
-            ErrorOr<AuthenticationResult> authenticationResult = _authenticationService.Login(loginRequest.Email, loginRequest.Password);
+            LoginQuery loginQuery = new (loginRequest.Email, loginRequest.Password);
+
+            ErrorOr<AuthenticationResult> authenticationResult = await _mediator.Send(loginQuery);
+            
             return authenticationResult.Match(
                 authenticationResult => Ok(MapToAuthenticationResult(authenticationResult)),
                 errors => Problem(errors));

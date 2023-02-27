@@ -1,8 +1,6 @@
 ﻿namespace Imageverse.Contracts.Authentication
 {
-    public record RegisterRequest
-    (
-        int PackageId,
+    public record RegisterRequest(int PackageId,
         string Name,
         string Username,
         string Surname,

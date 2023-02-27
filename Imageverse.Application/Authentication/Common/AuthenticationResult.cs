@@ -1,6 +1,6 @@
 ﻿using Imageverse.Domain.Entities;
 
-namespace Imageverse.Application.Services.Authentication
+namespace Imageverse.Application.Authentication.Common
 {
     public record AuthenticationResult(
         User User,
