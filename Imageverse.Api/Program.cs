@@ -1,7 +1,5 @@
-using Imageverse.Api.Common.Errors;
 using Imageverse.Application;
 using Imageverse.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Imageverse.Api
 {
@@ -11,10 +9,8 @@ namespace Imageverse.Api
         {
             var builder = WebApplication.CreateBuilder(args);
             {
-                builder.Services.AddControllers();
-                builder.Services.AddSwaggerGen();
-                builder.Services.AddSingleton<ProblemDetailsFactory, ImageverseProblemDetailsFactory>();
                 builder.Services
+                    .AddPresentation()
                     .AddAplication()
                     .AddInfrastructure(builder.Configuration);
             }

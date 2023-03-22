@@ -19,10 +19,10 @@ namespace Imageverse.Application.Authentication.Commands.Register
             _userRepository = userRepository;
         }
 
-        public async Task<ErrorOr<AuthenticationResult>> Handle(
-            RegisterCommand command,
-            CancellationToken cancellationToken)
+        public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
+            //TODO -> will have asyncronus logic this is just for now to stop the warning because it is bugging me
+            await Task.CompletedTask;
             if (_userRepository.GetUserByEmail(command.Email) is not null)
             {
                 return Errors.User.DuplicateEmail;

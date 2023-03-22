@@ -21,6 +21,8 @@ namespace Imageverse.Application.Authentication.Queries.Login
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
+            //TODO -> will have asyncronus logic this is just for now to stop the warning because it is bugging me
+            await Task.CompletedTask;
             if (_userRepository.GetUserByEmail(query.Email) is not User user
                 || user.Password != query.Password)
             {
