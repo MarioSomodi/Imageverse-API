@@ -5,10 +5,12 @@ using Imageverse.Application.Authentication.Queries.Login;
 using Imageverse.Contracts.Authentication;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Imageverse.Api.Controllers
 {
+    [AllowAnonymous]
     public class AuthenticationController : ApiController
     {
         private readonly ISender _mediator;

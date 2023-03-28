@@ -1,10 +1,12 @@
 ﻿using ErrorOr;
 using Imageverse.Api.Common.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Imageverse.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]/[action]")]
     public class ApiController : ControllerBase

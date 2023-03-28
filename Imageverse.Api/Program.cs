@@ -18,6 +18,8 @@ namespace Imageverse.Api
             var app = builder.Build();
             {
                 app.UseExceptionHandler("/Error");
+                app.UseAuthentication();
+                app.UseAuthorization();
                 if (app.Environment.IsDevelopment())
                 {
                     app.UseSwagger()
