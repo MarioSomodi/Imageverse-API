@@ -3,7 +3,7 @@ using Imageverse.Application.Authentication.Common;
 using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Domain.Common.Errors;
-using Imageverse.Domain.Entities;
+using Imageverse.Domain.User;
 using MediatR;
 
 namespace Imageverse.Application.Authentication.Commands.Register

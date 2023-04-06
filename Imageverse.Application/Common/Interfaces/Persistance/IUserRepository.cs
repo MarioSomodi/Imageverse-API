@@ -1,4 +1,4 @@
-﻿using Imageverse.Domain.Entities;
+﻿using Imageverse.Domain.User;
 
 namespace Imageverse.Application.Common.Interfaces.Persistance
 {

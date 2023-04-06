@@ -1,5 +1,5 @@
 ﻿using Imageverse.Application.Common.Interfaces.Persistance;
-using Imageverse.Domain.Entities;
+using Imageverse.Domain.User;
 
 namespace Imageverse.Infrastructure.Persistance
 {

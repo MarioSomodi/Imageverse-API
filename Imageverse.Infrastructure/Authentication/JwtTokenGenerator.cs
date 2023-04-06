@@ -1,6 +1,6 @@
 ﻿using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Services;
-using Imageverse.Domain.Entities;
+using Imageverse.Domain.User;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
