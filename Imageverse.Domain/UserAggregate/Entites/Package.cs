@@ -1,7 +1,7 @@
 ﻿using Imageverse.Domain.Models;
-using Imageverse.Domain.Post.ValueObjects;
+using Imageverse.Domain.UserAggregate.ValueObjects;
 
-namespace Imageverse.Domain.User.Entites
+namespace Imageverse.Domain.UserAggregate.Entites
 {
     public sealed class Package : Entity<PackageId>
     {

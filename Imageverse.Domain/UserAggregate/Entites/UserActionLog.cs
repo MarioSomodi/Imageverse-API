@@ -1,7 +1,7 @@
 ﻿using Imageverse.Domain.Models;
-using Imageverse.Domain.Post.ValueObjects;
+using Imageverse.Domain.UserAggregate.ValueObjects;
 
-namespace Imageverse.Domain.User.Entites
+namespace Imageverse.Domain.UserAggregate.Entites
 {
     public sealed class UserActionLog : Entity<UserActionLogId>
     {
@@ -11,18 +11,21 @@ namespace Imageverse.Domain.User.Entites
 
         private UserActionLog(
             UserActionLogId userActionLogId,
+            UserAction action,
             DateTime date,
             string message)
             : base(userActionLogId) 
         {
+            Action = action;
             Date = date;
             Message = message;
         }
 
-        public static UserActionLog Create(string message)
+        public static UserActionLog Create(UserAction action, string message)
         {
             return new(
                 UserActionLogId.CreateUnique(),
+                action,
                 DateTime.UtcNow,
                 message);
         }

@@ -1,6 +1,6 @@
 ﻿using Imageverse.Domain.Models;
 
-namespace Imageverse.Domain.Post.ValueObjects
+namespace Imageverse.Domain.UserAggregate.ValueObjects
 {
     public sealed class UserLimitId : ValueObject
     {

@@ -1,8 +1,9 @@
 ﻿using Imageverse.Domain.Models;
-using Imageverse.Domain.Post.Entites;
-using Imageverse.Domain.Post.ValueObjects;
+using Imageverse.Domain.PostAggregate.Entites;
+using Imageverse.Domain.PostAggregate.ValueObjects;
+using Imageverse.Domain.UserAggregate.ValueObjects;
 
-namespace Imageverse.Domain.Post
+namespace Imageverse.Domain.PostAggregate
 {
     public sealed class Post : AggregateRoot<PostId>
     {
@@ -20,20 +21,23 @@ namespace Imageverse.Domain.Post
 
         private Post(
             PostId postId,
+            UserId userId,
             string description,
             DateTime postedAtDateTime, DateTime updatedAtDateTime)
         : base (postId) 
         {
+            UserId = userId;
             Description = description;
             PostedAtDateTime = postedAtDateTime;
             UpdatedAtDateTime = updatedAtDateTime;
         }
 
         public static Post Create(
-            string description)
+            string description, UserId userId)
         {
             return new(
                 PostId.CreateUnique(),
+                userId,
                 description,
                 DateTime.UtcNow,
                 DateTime.UtcNow);

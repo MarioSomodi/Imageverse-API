@@ -1,17 +1,17 @@
 ﻿using Imageverse.Domain.Models;
 
-namespace Imageverse.Domain.Post.ValueObjects
+namespace Imageverse.Domain.PostAggregate.ValueObjects
 {
-    public sealed class UserActionLogId : ValueObject
+    public sealed class PostId : ValueObject
     {
         public Guid Value { get; }
 
-        public UserActionLogId(Guid value)
+        public PostId(Guid value)
         {
             Value = value;
         }
 
-        public static UserActionLogId CreateUnique()
+        public static PostId CreateUnique()
         {
             return new(Guid.NewGuid());
         }

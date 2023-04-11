@@ -1,19 +1,19 @@
 ﻿using Imageverse.Domain.Models;
 
-namespace Imageverse.Domain.Post.ValueObjects
+namespace Imageverse.Domain.UserAggregate.ValueObjects
 {
-    public sealed class UserStatisticsId : ValueObject
+    public sealed class UserId : ValueObject
     {
         public Guid Value { get; }
 
-        public UserStatisticsId(Guid value)
+        public UserId(Guid value)
         {
             Value = value;
         }
 
-        public static UserStatisticsId CreateUnique()
+        public static UserId CreateUnique()
         {
-            return new(Guid.NewGuid());
+            return new (Guid.NewGuid());
         }
 
         public override IEnumerable<object> GetEqualityComponents()

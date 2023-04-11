@@ -1,8 +1,9 @@
 ﻿using Imageverse.Domain.Models;
-using Imageverse.Domain.Post.ValueObjects;
-using Imageverse.Domain.User.Entites;
+using Imageverse.Domain.PostAggregate.ValueObjects;
+using Imageverse.Domain.UserAggregate.Entites;
+using Imageverse.Domain.UserAggregate.ValueObjects;
 
-namespace Imageverse.Domain.User
+namespace Imageverse.Domain.UserAggregate
 {
     public sealed class User : AggregateRoot<UserId>
     {
@@ -29,7 +30,8 @@ namespace Imageverse.Domain.User
             string surname,
             string email,
             string profileImage,
-            string password)
+            string password,
+            Package package)
             : base(userId)
         {
             Username = username;
@@ -38,6 +40,7 @@ namespace Imageverse.Domain.User
             Email = email;
             ProfileImage = profileImage;
             Password = password;
+            Package = package;
         }
 
         public static User Create(
@@ -46,7 +49,8 @@ namespace Imageverse.Domain.User
             string surname,
             string email,
             string profileImage,
-            string password)
+            string password,
+            Package package)
         {
             return new(
                 UserId.CreateUnique(),
@@ -55,7 +59,8 @@ namespace Imageverse.Domain.User
                 surname,
                 email,
                 profileImage,
-                password);
+                password,
+                package);
         }
     }
 }

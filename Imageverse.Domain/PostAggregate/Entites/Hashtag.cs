@@ -1,7 +1,7 @@
 ﻿using Imageverse.Domain.Models;
-using Imageverse.Domain.Post.ValueObjects;
+using Imageverse.Domain.PostAggregate.ValueObjects;
 
-namespace Imageverse.Domain.Post.Entites
+namespace Imageverse.Domain.PostAggregate.Entites
 {
     public sealed class Hashtag : Entity<HashtagId>
     {
