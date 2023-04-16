@@ -1,6 +1,6 @@
 ﻿using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Services;
-using Imageverse.Domain.User;
+using Imageverse.Domain.UserAggregate;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -28,7 +28,7 @@ namespace Imageverse.Infrastructure.Authentication
             
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.Name),
                 new Claim(JwtRegisteredClaimNames.FamilyName, user.Surname)
             };

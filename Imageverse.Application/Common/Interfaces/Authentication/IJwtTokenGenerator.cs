@@ -1,4 +1,4 @@
-﻿using Imageverse.Domain.User;
+﻿using Imageverse.Domain.UserAggregate;
 
 namespace Imageverse.Application.Common.Interfaces.Authentication
 {

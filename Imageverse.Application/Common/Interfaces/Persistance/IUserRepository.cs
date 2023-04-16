@@ -1,10 +1,11 @@
-﻿using Imageverse.Domain.User;
+﻿using Imageverse.Domain.UserAggregate;
+using Imageverse.Domain.UserAggregate.ValueObjects;
 
 namespace Imageverse.Application.Common.Interfaces.Persistance
 {
     public interface IUserRepository
     {
         User? GetUserByEmail(string email);
-        int Add(User user);
+        void Add(User user);
     }
 }
