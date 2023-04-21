@@ -3,8 +3,10 @@ using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Infrastructure.Authentication;
 using Imageverse.Infrastructure.Persistance;
+using Imageverse.Infrastructure.Persistance.Repositories;
 using Imageverse.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -17,11 +19,20 @@ namespace Imageverse.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
         {
-            services.AddAuth(configuration);
+            services
+                .AddAuth(configuration)
+                .AddPersistance(configuration);
 
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
+            return services;
+        }
+
+        public static IServiceCollection AddPersistance(this IServiceCollection services, ConfigurationManager configuration)
+        {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddDbContext<ImageverseDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("ImageverseDB")));
 
             return services;
         }
