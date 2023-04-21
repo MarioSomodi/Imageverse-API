@@ -9,9 +9,9 @@ namespace Imageverse.Contracts.Authentication
         string Surname,
         string Email,
         string ProfileImage,
-        PackageResponse Package,
+        string PackageId,
         List<string> PostIds,
-        List<string> UserActionLogs,
-        List<string> UserLimits,
+        List<string> UserActionLogIds,
+        List<string> UserLimitIds,
         string Token);
 }

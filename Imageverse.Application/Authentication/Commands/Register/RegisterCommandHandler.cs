@@ -3,8 +3,9 @@ using Imageverse.Application.Authentication.Common;
 using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Domain.Common.Errors;
+using Imageverse.Domain.PackageAggregate.ValueObjects;
 using Imageverse.Domain.UserAggregate;
-using Imageverse.Domain.UserAggregate.Entites;
+using Imageverse.Domain.UserAggregate.Entities;
 using MediatR;
 
 namespace Imageverse.Application.Authentication.Commands.Register
@@ -30,7 +31,9 @@ namespace Imageverse.Application.Authentication.Commands.Register
                 return Errors.User.DuplicateEmail;
             }
             //Implement controller, repository and mediator logic for creating the package -> this is a mock for now.
-            Package package = Package.Create("default", 1, 1, 1, 1);
+            PackageId packageId = PackageId.CreateUnique();
+
+            UserStatistics userStatistics = UserStatistics.Create(1,1,1,1,1);
 
             User user = User.Create(
                 command.Username,
@@ -39,7 +42,8 @@ namespace Imageverse.Application.Authentication.Commands.Register
                 command.Email,
                 command.ProfileImage,
                 command.Password,
-                package);
+                packageId,
+                userStatistics);
 
             _userRepository.Add(user);
 
