@@ -100,56 +100,6 @@ namespace Imageverse.Infrastructure.Persistance.Configurations
             });
         }
 
-        //private void ConfigureUserActionLogsTable(EntityTypeBuilder<User> builder)
-        //{
-        //    //Each user owns many UserActionLogs
-        //    builder.OwnsMany(m => m.UserActionLogs, uALB =>
-        //    {
-        //        uALB.ToTable("UserActonsLogs");
-
-        //        uALB.WithOwner().HasForeignKey("UserId");
-
-        //        uALB.HasKey("Id", "UserId");
-
-        //        uALB.Property(uAL => uAL.Id)
-        //            .HasColumnName("UserActionLogId")
-        //            .ValueGeneratedNever()
-        //            .HasConversion(
-        //            id => id.Value,
-        //            value => UserActionLogId.Create(value));
-
-        //        uALB.Property(m => m.Message)
-        //            .HasMaxLength(2000);
-        //        //Each UserActionLog owns one UserAction
-        //        uALB.OwnsOne(m => m.Action, aB =>
-        //        {
-        //            aB.ToTable("UserActions");
-
-        //            aB.
-        //        });
-        //    });
-        //}
-
-        //private void ConfigureUserLimitsTable(EntityTypeBuilder<User> builder)
-        //{
-        //    //Each user owns many UserLimits
-        //    builder.OwnsMany(m => m.UserLimits, uLB =>
-        //    {
-        //        uLB.ToTable("UserLimits");
-
-        //        uLB.WithOwner().HasForeignKey("UserId");
-
-        //        uLB.HasKey("Id", "UserId");
-
-        //        uLB.Property(m => m.Id)
-        //            .HasColumnName("UserLimitId")
-        //            .ValueGeneratedNever()
-        //            .HasConversion(
-        //            id => id.Value,
-        //            value => UserLimitId.Create(value));
-        //    });
-        //}
-
         private void ConfigureUsersTable(EntityTypeBuilder<User> builder)
         {
             builder.ToTable("Users");
