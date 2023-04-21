@@ -1,23 +1,21 @@
 ﻿using Imageverse.Domain.Models;
 using Imageverse.Domain.UserAggregate.ValueObjects;
 
-namespace Imageverse.Domain.UserAggregate.Entites
+namespace Imageverse.Domain.UserAggregate.Entities
 {
     public sealed class UserStatistics : Entity<UserStatisticsId>
     {
-        //In MB
-        public int TotalUploaded { get; }
-        public int TotalImagesUploaded { get; }
-        public int TotalTimesUserRequestedPackageChange { get; set; }
-        public DateTime FirstLogin { get; }
-        public DateTime LastLogin { get; }
-        public int TotalTimesLoggedIn { get; }
-        public int TotalTimesPostsWereEdited { get; }
-
+        public int TotalMBUploaded { get; private set; }
+        public int TotalImagesUploaded { get; private set; }
+        public int TotalTimesUserRequestedPackageChange { get; private set; }
+        public DateTime FirstLogin { get; private set; }
+        public DateTime LastLogin { get; private set; }
+        public int TotalTimesLoggedIn { get; private set; }
+        public int TotalTimesPostsWereEdited { get; private set; }
 
         private UserStatistics(
             UserStatisticsId userStatisticsId,
-            int totalUploaded,
+            int totalMBUploaded,
             int totalImagesUploaded,
             int totalTimesUserRequestedPackageChange,
             DateTime lastLogin,
@@ -26,7 +24,7 @@ namespace Imageverse.Domain.UserAggregate.Entites
             int totalTimesPostsWereEdited)
             : base(userStatisticsId)
         {
-            TotalUploaded = totalUploaded;
+            TotalMBUploaded = totalMBUploaded;
             TotalImagesUploaded = totalImagesUploaded;
             TotalTimesUserRequestedPackageChange = totalTimesUserRequestedPackageChange;
             FirstLogin = firstLogin;
@@ -36,15 +34,15 @@ namespace Imageverse.Domain.UserAggregate.Entites
         }
 
         public static UserStatistics Create(
-            int totalUploaded,
+            int totalMBUploaded,
             int totalImagesUploaded,
             int timesUserRequestedPackageChange,
-            int timesLoggedIn, 
+            int timesLoggedIn,
             int totalTimesPostsWereEdited)
         {
             return new(
                 UserStatisticsId.CreateUnique(),
-                totalUploaded,
+                totalMBUploaded,
                 totalImagesUploaded,
                 timesUserRequestedPackageChange,
                 DateTime.UtcNow,
@@ -52,5 +50,11 @@ namespace Imageverse.Domain.UserAggregate.Entites
                 timesLoggedIn,
                 totalTimesPostsWereEdited);
         }
+
+#pragma warning disable CS8618
+        private UserStatistics()
+        {
+        }
+#pragma warning restore CS8618 
     }
 }

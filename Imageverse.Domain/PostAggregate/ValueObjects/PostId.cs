@@ -11,6 +11,11 @@ namespace Imageverse.Domain.PostAggregate.ValueObjects
             Value = value;
         }
 
+        public static PostId Create(Guid value)
+        {
+            return new(value);
+        }
+
         public static PostId CreateUnique()
         {
             return new(Guid.NewGuid());

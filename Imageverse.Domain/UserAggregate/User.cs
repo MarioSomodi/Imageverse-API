@@ -1,27 +1,31 @@
 ﻿using Imageverse.Domain.Models;
+using Imageverse.Domain.PackageAggregate.ValueObjects;
 using Imageverse.Domain.PostAggregate.ValueObjects;
-using Imageverse.Domain.UserAggregate.Entites;
+using Imageverse.Domain.UserActionLogAggregate.ValueObjects;
+using Imageverse.Domain.UserAggregate.Entities;
 using Imageverse.Domain.UserAggregate.ValueObjects;
+using Imageverse.Domain.UserLimitAggregate.ValueObjects;
 
 namespace Imageverse.Domain.UserAggregate
 {
     public sealed class User : AggregateRoot<UserId>
     {
         private readonly List<PostId> _postIds = new();
-        private readonly List<UserActionLog> _userActionLogs = new();
-        private readonly List<UserLimit> _userLimits = new();
+        private readonly List<UserActionLogId> _userActionLogIds = new();
+        private readonly List<UserLimitId> _userLimitIds = new();
 
-        public string Username { get; }
-        public string Name { get; } 
-        public string Surname { get; } 
-        public string Email { get; } 
-        public string ProfileImage { get; } 
-        public string Password { get; } 
-        public Package Package { get; }
+        public string Username { get; private set; }
+        public string Name { get; private set; } 
+        public string Surname { get; private set; } 
+        public string Email { get; private set; } 
+        public string ProfileImage { get; private set; } 
+        public string Password { get; private set; } 
+        public PackageId PackageId { get; private set; }
+        public UserStatistics UserStatistics { get; private set; }
 
         public IReadOnlyList<PostId> PostIds => _postIds.AsReadOnly();
-        public IReadOnlyList<UserActionLog> UserActionLogs => _userActionLogs.AsReadOnly();
-        public IReadOnlyList<UserLimit> UserLimits => _userLimits.AsReadOnly();
+        public IReadOnlyList<UserActionLogId> UserActionLogIds => _userActionLogIds.AsReadOnly();
+        public IReadOnlyList<UserLimitId> UserLimitIds => _userLimitIds.AsReadOnly();
 
         private User(
             UserId userId,
@@ -31,7 +35,8 @@ namespace Imageverse.Domain.UserAggregate
             string email,
             string profileImage,
             string password,
-            Package package)
+            PackageId packageId,
+            UserStatistics userStatistics)
             : base(userId)
         {
             Username = username;
@@ -40,7 +45,8 @@ namespace Imageverse.Domain.UserAggregate
             Email = email;
             ProfileImage = profileImage;
             Password = password;
-            Package = package;
+            PackageId = packageId;
+            UserStatistics = userStatistics;
         }
 
         public static User Create(
@@ -50,7 +56,8 @@ namespace Imageverse.Domain.UserAggregate
             string email,
             string profileImage,
             string password,
-            Package package)
+            PackageId packageId,
+            UserStatistics userStatstics)
         {
             return new(
                 UserId.CreateUnique(),
@@ -60,7 +67,14 @@ namespace Imageverse.Domain.UserAggregate
                 email,
                 profileImage,
                 password,
-                package);
+                packageId,
+                userStatstics);
         }
+
+#pragma warning disable CS8618
+        private User()
+        {
+        }
+#pragma warning restore CS8618 
     }
 }

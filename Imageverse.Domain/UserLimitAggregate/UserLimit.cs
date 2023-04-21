@@ -1,17 +1,17 @@
 ﻿using Imageverse.Domain.Models;
-using Imageverse.Domain.UserAggregate.ValueObjects;
+using Imageverse.Domain.UserLimitAggregate.ValueObjects;
 
-namespace Imageverse.Domain.UserAggregate.Entites
+namespace Imageverse.Domain.UserLimitAggregate
 {
-    public sealed class UserLimit : Entity<UserLimitId>
+    public sealed class UserLimit : AggregateRoot<UserLimitId>
     {
-        public DateTime Date { get; }
+        public DateTime Date { get; private set; }
         /// <summary>
         /// Specifies total MB of images uploaded on specific date
         /// </summary>
-        public int AmountUploaded { get; }
-        public int AmountOfImagesUploaded { get; }
-        public int RequestedChangeOfPackage { get; }
+        public int AmountOfMBUploaded { get; private set; }
+        public int AmountOfImagesUploaded { get; private set; }
+        public int RequestedChangeOfPackage { get; private set; }
 
         private UserLimit(
             UserLimitId userLimitId,
@@ -22,7 +22,7 @@ namespace Imageverse.Domain.UserAggregate.Entites
             : base(userLimitId)
         {
             Date = date;
-            AmountUploaded = amountUploaded;
+            AmountOfMBUploaded = amountUploaded;
             AmountOfImagesUploaded = amountOfImagesUploaded;
             RequestedChangeOfPackage = requestedChangeOfPackage;
         }
@@ -39,5 +39,11 @@ namespace Imageverse.Domain.UserAggregate.Entites
                 amountOfImagesUploaded,
                 requestedChangeOfPackage);
         }
+
+#pragma warning disable CS8618
+        private UserLimit()
+        {
+        }
+#pragma warning restore CS8618 
     }
 }

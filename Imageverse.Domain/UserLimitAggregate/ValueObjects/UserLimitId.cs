@@ -1,17 +1,22 @@
 ﻿using Imageverse.Domain.Models;
 
-namespace Imageverse.Domain.PostAggregate.ValueObjects
+namespace Imageverse.Domain.UserLimitAggregate.ValueObjects
 {
-    public sealed class HashtagId : ValueObject
+    public sealed class UserLimitId : ValueObject
     {
         public Guid Value { get; }
 
-        public HashtagId(Guid value)
+        public UserLimitId(Guid value)
         {
             Value = value;
         }
 
-        public static HashtagId CreateUnique()
+        public static UserLimitId Create(Guid value)
+        {
+            return new(value);
+        }
+
+        public static UserLimitId CreateUnique()
         {
             return new(Guid.NewGuid());
         }

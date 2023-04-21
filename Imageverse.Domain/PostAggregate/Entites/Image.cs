@@ -5,14 +5,14 @@ namespace Imageverse.Domain.PostAggregate.Entites
 {
     public sealed class Image : Entity<ImageId>
     {
-        public string Name { get; }
-        public string Url { get; }
+        public string Name { get; private set; }
+        public string Url { get; private set; }
         /// <summary>
         /// Specifies image size in MB
         /// </summary>
-        public int Size { get; }
-        public string Resolution { get; }
-        public string Format { get; }
+        public int Size { get; private set; }
+        public string Resolution { get; private set; }
+        public string Format { get; private set; }
 
         private Image(
             ImageId imageId,
@@ -44,5 +44,10 @@ namespace Imageverse.Domain.PostAggregate.Entites
                 resolution,
                 format);
         }
+#pragma warning disable CS8618
+        private Image()
+        {
+        }
+#pragma warning restore CS8618 
     }
 }

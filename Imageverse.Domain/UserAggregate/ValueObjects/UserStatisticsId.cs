@@ -11,6 +11,12 @@ namespace Imageverse.Domain.UserAggregate.ValueObjects
             Value = value;
         }
 
+        public static UserStatisticsId Create(Guid value)
+        {
+            return new(value);
+        }
+
+
         public static UserStatisticsId CreateUnique()
         {
             return new(Guid.NewGuid());

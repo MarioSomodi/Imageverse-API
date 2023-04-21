@@ -5,7 +5,7 @@
     {
         public TId Id { get; protected set; }
 
-        public Entity(TId id) { 
+        protected Entity(TId id) { 
             Id = id;
         }
 
@@ -33,5 +33,11 @@
         {
             return Id.GetHashCode();
         }
+
+#pragma warning disable CS8618
+        protected Entity()
+        {
+        }
+#pragma warning restore CS8618 
     }
 }

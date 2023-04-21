@@ -1,24 +1,24 @@
 ﻿using Imageverse.Domain.Models;
-using Imageverse.Domain.UserAggregate.ValueObjects;
+using Imageverse.Domain.PackageAggregate.ValueObjects;
 
-namespace Imageverse.Domain.UserAggregate.Entites
+namespace Imageverse.Domain.PackageAggregate
 {
-    public sealed class Package : Entity<PackageId>
+    public sealed class Package : AggregateRoot<PackageId>
     {
-        public string Name { get; }
-        public double Price { get; }
+        public string Name { get; private set; }
+        public double Price { get; private set; }
         /// <summary>
         /// Specifies the highest upload size for an image in MB
         /// </summary>
-        public int UploadSizeLimit { get; }
+        public int UploadSizeLimit { get; private set; }
         /// <summary>
         /// Specifies total amount of MB that user can upload daily
         /// </summary>
-        public int DailyUploadLimit { get; }
+        public int DailyUploadLimit { get; private set; }
         /// <summary>
         /// Specifies the amount of images a user can upload daily
         /// </summary>
-        public int DailyImageUploadLimit { get; }
+        public int DailyImageUploadLimit { get; private set; }
 
         private Package(
             PackageId packageId,
@@ -51,5 +51,11 @@ namespace Imageverse.Domain.UserAggregate.Entites
                 dailyUploadLimit,
                 dailyImageUploadLimit);
         }
+
+#pragma warning disable CS8618
+        private Package()
+        {
+        }
+#pragma warning restore CS8618 
     }
 }

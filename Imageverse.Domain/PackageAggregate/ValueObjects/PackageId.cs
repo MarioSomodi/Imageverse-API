@@ -1,17 +1,22 @@
 ﻿using Imageverse.Domain.Models;
 
-namespace Imageverse.Domain.UserAggregate.ValueObjects
+namespace Imageverse.Domain.PackageAggregate.ValueObjects
 {
-    public sealed class UserLimitId : ValueObject
+    public sealed class PackageId : ValueObject
     {
         public Guid Value { get; }
 
-        public UserLimitId(Guid value)
+        public PackageId(Guid value)
         {
             Value = value;
         }
 
-        public static UserLimitId CreateUnique()
+        public static PackageId Create(Guid value)
+        {
+            return new(value);
+        }
+
+        public static PackageId CreateUnique()
         {
             return new(Guid.NewGuid());
         }

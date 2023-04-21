@@ -1,12 +1,12 @@
 ﻿using Imageverse.Domain.Models;
-using Imageverse.Domain.UserAggregate.ValueObjects;
+using Imageverse.Domain.UserActionAggregate.ValueObjects;
 
-namespace Imageverse.Domain.UserAggregate.Entites
+namespace Imageverse.Domain.UserActionAggregate
 {
-    public sealed class UserAction : Entity<UserActionId>
+    public sealed class UserAction : AggregateRoot<UserActionId>
     {
-        public string Name { get; }
-        public string Description { get; }
+        public string Name { get; private set; }
+        public string Description { get; private set; }
 
         private UserAction(
             UserActionId userActionId,
@@ -25,5 +25,11 @@ namespace Imageverse.Domain.UserAggregate.Entites
                 name,
                 description);
         }
+
+#pragma warning disable CS8618
+        private UserAction()
+        {
+        }
+#pragma warning restore CS8618 
     }
 }

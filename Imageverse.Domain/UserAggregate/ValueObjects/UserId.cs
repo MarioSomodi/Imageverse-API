@@ -11,9 +11,14 @@ namespace Imageverse.Domain.UserAggregate.ValueObjects
             Value = value;
         }
 
+        public static UserId Create(Guid value)
+        {
+            return new(value);
+        }
+
         public static UserId CreateUnique()
         {
-            return new (Guid.NewGuid());
+            return new(Guid.NewGuid());
         }
 
         public override IEnumerable<object> GetEqualityComponents()

@@ -1,6 +1,6 @@
 ﻿using Imageverse.Domain.Models;
 
-namespace Imageverse.Domain.UserAggregate.ValueObjects
+namespace Imageverse.Domain.UserActionLogAggregate.ValueObjects
 {
     public sealed class UserActionLogId : ValueObject
     {
@@ -9,6 +9,11 @@ namespace Imageverse.Domain.UserAggregate.ValueObjects
         public UserActionLogId(Guid value)
         {
             Value = value;
+        }
+
+        public static UserActionLogId Create(Guid value)
+        {
+            return new(value);
         }
 
         public static UserActionLogId CreateUnique()
