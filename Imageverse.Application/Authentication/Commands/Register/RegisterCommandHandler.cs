@@ -33,6 +33,7 @@ namespace Imageverse.Application.Authentication.Commands.Register
             //Implement controller, repository and mediator logic for creating the package -> this is a mock for now.
             PackageId packageId = PackageId.CreateUnique();
 
+            //Implement the logic for creating the initial userStatistic object -> this is a mock for now.
             UserStatistics userStatistics = UserStatistics.Create(1,1,1,1,1);
 
             User user = User.Create(
