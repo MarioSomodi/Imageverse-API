@@ -22,6 +22,7 @@ namespace Imageverse.Domain.UserAggregate
         public string Password { get; private set; } 
         public PackageId PackageId { get; private set; }
         public UserStatistics UserStatistics { get; private set; }
+        public byte[] Salt { get; private set; }
 
         public IReadOnlyList<PostId> PostIds => _postIds.AsReadOnly();
         public IReadOnlyList<UserActionLogId> UserActionLogIds => _userActionLogIds.AsReadOnly();
@@ -36,7 +37,8 @@ namespace Imageverse.Domain.UserAggregate
             string profileImage,
             string password,
             PackageId packageId,
-            UserStatistics userStatistics)
+            UserStatistics userStatistics,
+            byte[] salt)
             : base(userId)
         {
             Username = username;
@@ -47,6 +49,7 @@ namespace Imageverse.Domain.UserAggregate
             Password = password;
             PackageId = packageId;
             UserStatistics = userStatistics;
+            Salt = salt;
         }
 
         public static User Create(
@@ -57,7 +60,8 @@ namespace Imageverse.Domain.UserAggregate
             string profileImage,
             string password,
             PackageId packageId,
-            UserStatistics userStatstics)
+            UserStatistics userStatstics,
+            byte[] salt)
         {
             return new(
                 UserId.CreateUnique(),
@@ -68,7 +72,8 @@ namespace Imageverse.Domain.UserAggregate
                 profileImage,
                 password,
                 packageId,
-                userStatstics);
+                userStatstics,
+                salt);
         }
 
 #pragma warning disable CS8618

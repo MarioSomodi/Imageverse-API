@@ -34,7 +34,6 @@ namespace Imageverse.Api.Controllers
                 errors => Problem(errors));
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest loginRequest)
         {

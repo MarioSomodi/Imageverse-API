@@ -1,6 +1,6 @@
 ﻿using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Domain.UserAggregate;
-using Imageverse.Domain.UserAggregate.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace Imageverse.Infrastructure.Persistance.Repositories
 {
@@ -13,15 +13,15 @@ namespace Imageverse.Infrastructure.Persistance.Repositories
             _dbContext = dbContext;
         }
 
-        public void Add(User user)
+        public async Task Add(User user)
         {
-            _dbContext.Add(user);
-            _dbContext.SaveChanges();
+            await _dbContext.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public User? GetUserByEmail(string email)
+        public async Task<User?> GetUserByEmail(string email)
         {
-            return _dbContext.Users.SingleOrDefault(u => u.Email == email);
+            return await _dbContext.Users.SingleOrDefaultAsync(u => u.Email == email);
         }
     }
 }

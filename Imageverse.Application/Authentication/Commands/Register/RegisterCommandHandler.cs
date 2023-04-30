@@ -14,27 +14,29 @@ namespace Imageverse.Application.Authentication.Commands.Register
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IUserRepository _userRepository;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
+        public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
             _userRepository = userRepository;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
-            //TODO add Missing error check in the create function of aggregates
-            //TODO -> will have asyncronus logic this is just for now to stop the warning because it is bugging me
-            await Task.CompletedTask;
-            if (_userRepository.GetUserByEmail(command.Email) is not null)
+            if (await _userRepository.GetUserByEmail(command.Email) is not null)
             {
                 return Errors.User.DuplicateEmail;
             }
+
             //Implement controller, repository and mediator logic for creating the package -> this is a mock for now.
             PackageId packageId = PackageId.CreateUnique();
 
             //Implement the logic for creating the initial userStatistic object -> this is a mock for now.
             UserStatistics userStatistics = UserStatistics.Create(1,1,1,1,1);
+
+            var hashedPassword = _passwordHasher.HashPassword(command.Password, out byte[] salt); 
 
             User user = User.Create(
                 command.Username,
@@ -42,11 +44,12 @@ namespace Imageverse.Application.Authentication.Commands.Register
                 command.Surname,
                 command.Email,
                 command.ProfileImage,
-                command.Password,
+                hashedPassword,
                 packageId,
-                userStatistics);
+                userStatistics,
+                salt);
 
-            _userRepository.Add(user);
+            await _userRepository.Add(user);
 
             var token = _jwtTokenGenerator.GenerateToken(user);
 

@@ -12,19 +12,19 @@ namespace Imageverse.Application.Authentication.Queries.Login
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IUserRepository _userRepository;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public LoginQueryHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
+        public LoginQueryHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
             _userRepository = userRepository;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
-            //TODO -> will have asyncronus logic this is just for now to stop the warning because it is bugging me
-            await Task.CompletedTask;
-            if (_userRepository.GetUserByEmail(query.Email) is not User user
-                || user.Password != query.Password)
+            if (await _userRepository.GetUserByEmail(query.Email) is not User user
+                || !_passwordHasher.VerifyPassword(query.Password, user.Password, user.Salt))
             {
                 return Errors.Authentication.InvalidCredentials;
             }
