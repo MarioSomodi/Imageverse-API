@@ -31,6 +31,8 @@ namespace Imageverse.Infrastructure
         public static IServiceCollection AddPersistance(this IServiceCollection services, ConfigurationManager configuration)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IPackageRepository, PackageRepository>();
+
             services.AddDbContext<ImageverseDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("ImageverseDB")));
 

@@ -16,8 +16,8 @@ namespace Imageverse.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet("{id}")]
+        public IActionResult GetById(string id)
         {
             return Ok(Array.Empty<string>());
         }
