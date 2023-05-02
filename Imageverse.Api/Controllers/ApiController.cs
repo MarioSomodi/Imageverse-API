@@ -8,7 +8,7 @@ namespace Imageverse.Api.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]/[action]")]
+    [Route("[controller]")]
     public class ApiController : ControllerBase
     {
         [ApiExplorerSettings(IgnoreApi = true)]

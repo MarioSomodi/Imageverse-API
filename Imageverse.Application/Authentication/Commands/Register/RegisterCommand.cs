@@ -11,5 +11,5 @@ namespace Imageverse.Application.Authentication.Commands.Register
         string Email,
         string ProfileImage,
         string Password,
-        int PackageId) : IRequest<ErrorOr<AuthenticationResult>>;
+        string PackageId) : IRequest<ErrorOr<AuthenticationResult>>;
 }

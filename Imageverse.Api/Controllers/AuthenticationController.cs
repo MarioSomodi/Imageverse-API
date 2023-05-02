@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Imageverse.Api.Controllers
 {
     [AllowAnonymous]
+    [Route("[controller]/[action]")]
     public class AuthenticationController : ApiController
     {
         private readonly ISender _mediator;
