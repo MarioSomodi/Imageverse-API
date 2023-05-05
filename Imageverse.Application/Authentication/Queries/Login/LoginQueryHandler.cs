@@ -23,7 +23,7 @@ namespace Imageverse.Application.Authentication.Queries.Login
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
-            if (await _userRepository.GetUserByEmail(query.Email) is not User user
+            if (await _userRepository.GetSingleOrDefaultByPropertyValueAsync(nameof(query.Email), query.Email) is not User user
                 || !_passwordHasher.VerifyPassword(query.Password, user.Password, user.Salt))
             {
                 return Errors.Authentication.InvalidCredentials;

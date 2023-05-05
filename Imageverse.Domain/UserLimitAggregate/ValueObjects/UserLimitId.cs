@@ -2,11 +2,11 @@
 
 namespace Imageverse.Domain.UserLimitAggregate.ValueObjects
 {
-    public sealed class UserLimitId : AggregateRootId<Guid>
+    public sealed class UserLimitId : ValueObject
     {
-        public override Guid Value { get; protected set; }
+        public Guid Value { get; }
 
-        public UserLimitId(Guid value)
+        private UserLimitId(Guid value)
         {
             Value = value;
         }

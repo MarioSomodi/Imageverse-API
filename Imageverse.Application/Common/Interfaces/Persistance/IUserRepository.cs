@@ -3,9 +3,7 @@ using Imageverse.Domain.UserAggregate.ValueObjects;
 
 namespace Imageverse.Application.Common.Interfaces.Persistance
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepository<User, UserId>
     {
-        Task<User?> GetUserByEmail(string email);
-        Task Add(User user);
     }
 }

@@ -3,7 +3,7 @@ using Imageverse.Domain.Models;
 
 namespace Imageverse.Domain.HashtagAggregate
 {
-    public sealed class Hashtag : AggregateRoot<HashtagId, Guid>
+    public sealed class Hashtag : AggregateRoot<HashtagId>
     {
         public string Name { get; private set; }
 

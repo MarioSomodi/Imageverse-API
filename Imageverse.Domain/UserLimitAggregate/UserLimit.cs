@@ -3,7 +3,7 @@ using Imageverse.Domain.UserLimitAggregate.ValueObjects;
 
 namespace Imageverse.Domain.UserLimitAggregate
 {
-    public sealed class UserLimit : AggregateRoot<UserLimitId, Guid>
+    public sealed class UserLimit : AggregateRoot<UserLimitId>
     {
         public DateTime Date { get; private set; }
         /// <summary>

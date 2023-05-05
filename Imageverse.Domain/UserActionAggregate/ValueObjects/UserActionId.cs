@@ -2,11 +2,11 @@
 
 namespace Imageverse.Domain.UserActionAggregate.ValueObjects
 {
-    public sealed class UserActionId : AggregateRootId<Guid>
+    public sealed class UserActionId : ValueObject
     {
-        public override Guid Value { get; protected set; }
+        public Guid Value { get; }
 
-        public UserActionId(Guid value)
+        private UserActionId(Guid value)
         {
             Value = value;
         }

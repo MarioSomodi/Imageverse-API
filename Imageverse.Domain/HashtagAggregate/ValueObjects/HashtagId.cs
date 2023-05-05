@@ -2,11 +2,11 @@
 
 namespace Imageverse.Domain.HashtagAggregate.ValueObjects
 {
-    public sealed class HashtagId : AggregateRootId<Guid>
+    public sealed class HashtagId : ValueObject
     {
-        public override Guid Value { get; protected set; }
+        public Guid Value { get; }
 
-        public HashtagId(Guid value)
+        private HashtagId(Guid value)
         {
             Value = value;
         }

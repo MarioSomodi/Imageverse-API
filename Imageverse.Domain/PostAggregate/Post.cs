@@ -6,7 +6,7 @@ using Imageverse.Domain.UserAggregate.ValueObjects;
 
 namespace Imageverse.Domain.PostAggregate
 {
-    public sealed class Post : AggregateRoot<PostId, Guid>
+    public sealed class Post : AggregateRoot<PostId>
     {
         private readonly List<Image> _images = new();
         private readonly List<HashtagId> _hashtagIds = new();

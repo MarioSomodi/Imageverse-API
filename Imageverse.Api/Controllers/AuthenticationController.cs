@@ -41,7 +41,7 @@ namespace Imageverse.Api.Controllers
             LoginQuery loginQuery = _mapper.Map<LoginQuery>(loginRequest);
 
             ErrorOr<AuthenticationResult> authenticationResult = await _mediator.Send(loginQuery);
-            
+
             return authenticationResult.Match(
                 authenticationResult => Ok(_mapper.Map<AuthenticationResponse>(authenticationResult)),
                 errors => Problem(errors));

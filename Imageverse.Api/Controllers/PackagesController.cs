@@ -1,4 +1,8 @@
-﻿using MapsterMapper;
+﻿using ErrorOr;
+using Imageverse.Application.Packages.Queries.GetById;
+using Imageverse.Contracts.Packages;
+using Imageverse.Domain.PackageAggregate;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +21,15 @@ namespace Imageverse.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(string id)
+        public async Task<IActionResult> GetById(string id)
         {
-            return Ok(Array.Empty<string>());
+            GetPackageByIdQuery getByIdQuery = new GetPackageByIdQuery(id);
+
+            ErrorOr<Package> result = await _mediator.Send(getByIdQuery);
+
+            return result.Match(
+                result => Ok(_mapper.Map<PackageResponse>(result)),
+                errors => Problem(errors));
         }
     }
 }

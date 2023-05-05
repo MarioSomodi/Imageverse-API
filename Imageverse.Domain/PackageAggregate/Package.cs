@@ -3,7 +3,7 @@ using Imageverse.Domain.PackageAggregate.ValueObjects;
 
 namespace Imageverse.Domain.PackageAggregate
 {
-    public sealed class Package : AggregateRoot<PackageId, Guid>
+    public sealed class Package : AggregateRoot<PackageId>
     {
         public string Name { get; private set; }
         public double Price { get; private set; }

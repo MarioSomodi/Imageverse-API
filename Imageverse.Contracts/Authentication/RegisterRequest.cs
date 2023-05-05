@@ -7,5 +7,5 @@
         string Email,
         string ProfileImage,
         string Password,
-        int PackageId);
+        string PackageId);
 }

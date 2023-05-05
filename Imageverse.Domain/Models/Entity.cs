@@ -5,7 +5,8 @@
     {
         public TId Id { get; protected set; }
 
-        protected Entity(TId id) { 
+        protected Entity(TId id)
+        {
             Id = id;
         }
 
@@ -38,6 +39,6 @@
         protected Entity()
         {
         }
-#pragma warning restore CS8618 
+#pragma warning restore CS8618
     }
 }

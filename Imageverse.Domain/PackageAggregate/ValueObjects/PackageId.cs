@@ -2,11 +2,11 @@
 
 namespace Imageverse.Domain.PackageAggregate.ValueObjects
 {
-    public sealed class PackageId : AggregateRootId<Guid>
+    public sealed class PackageId : ValueObject
     {
-        public override Guid Value { get; protected set; }
+        public Guid Value { get; }
 
-        public PackageId(Guid value)
+        private PackageId(Guid value)
         {
             Value = value;
         }

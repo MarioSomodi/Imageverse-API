@@ -25,7 +25,7 @@ namespace Imageverse.Application.Authentication.Commands.Register
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
-            if (await _userRepository.GetUserByEmail(command.Email) is not null)
+            if (await _userRepository.GetSingleOrDefaultByPropertyValueAsync(nameof(command.Email), command.Email) is not null)
             {
                 return Errors.User.DuplicateEmail;
             }
@@ -49,7 +49,7 @@ namespace Imageverse.Application.Authentication.Commands.Register
                 userStatistics,
                 salt);
 
-            await _userRepository.Add(user);
+            await _userRepository.AddAsync(user);
 
             var token = _jwtTokenGenerator.GenerateToken(user);
 

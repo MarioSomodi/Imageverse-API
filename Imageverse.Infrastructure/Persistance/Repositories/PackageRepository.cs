@@ -1,27 +1,13 @@
 ﻿using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Domain.PackageAggregate;
-using Microsoft.EntityFrameworkCore;
+using Imageverse.Domain.PackageAggregate.ValueObjects;
 
 namespace Imageverse.Infrastructure.Persistance.Repositories
 {
-    public class PackageRepository : IPackageRepository
+    public class PackageRepository : Repository<Package, PackageId>, IPackageRepository
     {
-        private readonly ImageverseDbContext _dbContext;
-
-        public PackageRepository(ImageverseDbContext dbContext)
+        public PackageRepository(ImageverseDbContext dbContext) : base (dbContext)
         {
-            _dbContext = dbContext;
-        }
-
-        public async Task Add(Package package)
-        {
-            await _dbContext.Packages.AddAsync(package);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task<Package?> GetPacakgeById(string id)
-        {
-            return await _dbContext.Packages.SingleOrDefaultAsync(p => p.Id.Value == new Guid(id));
         }
     }
 }

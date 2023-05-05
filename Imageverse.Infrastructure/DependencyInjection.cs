@@ -30,6 +30,7 @@ namespace Imageverse.Infrastructure
 
         public static IServiceCollection AddPersistance(this IServiceCollection services, ConfigurationManager configuration)
         {
+            services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPackageRepository, PackageRepository>();
 

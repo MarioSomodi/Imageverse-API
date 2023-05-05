@@ -4,7 +4,7 @@ using Imageverse.Domain.UserActionLogAggregate.ValueObjects;
 
 namespace Imageverse.Domain.UserActionLogAggregate
 {
-    public sealed class UserActionLog : AggregateRoot<UserActionLogId, Guid>
+    public sealed class UserActionLog : AggregateRoot<UserActionLogId>
     {
         public UserActionId ActionId { get; private set; }
         public DateTime Date { get; private set; }

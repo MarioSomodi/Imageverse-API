@@ -3,7 +3,7 @@ using Imageverse.Domain.UserActionAggregate.ValueObjects;
 
 namespace Imageverse.Domain.UserActionAggregate
 {
-    public sealed class UserAction : AggregateRoot<UserActionId, Guid>
+    public sealed class UserAction : AggregateRoot<UserActionId>
     {
         public string Name { get; private set; }
         public string Description { get; private set; }
