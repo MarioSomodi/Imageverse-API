@@ -188,7 +188,7 @@ namespace Imageverse.Infrastructure.Migrations
 
             modelBuilder.Entity("Imageverse.Domain.PostAggregate.Post", b =>
                 {
-                    b.OwnsMany("Imageverse.Domain.HashtagAggregate.ValueObjects.HashtagId", "HashtagIds", b1 =>
+                    b.OwnsMany("Imageverse.Domain.PostAggregate.Post.HashtagIds#Imageverse.Domain.HashtagAggregate.ValueObjects.HashtagId", "HashtagIds", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -213,7 +213,7 @@ namespace Imageverse.Infrastructure.Migrations
                                 .HasForeignKey("PostId");
                         });
 
-                    b.OwnsMany("Imageverse.Domain.PostAggregate.Entites.Image", "Images", b1 =>
+                    b.OwnsMany("Imageverse.Domain.PostAggregate.Post.Images#Imageverse.Domain.PostAggregate.Entites.Image", "Images", b1 =>
                         {
                             b1.Property<Guid>("Id")
                                 .HasColumnType("uniqueidentifier")
@@ -258,7 +258,7 @@ namespace Imageverse.Infrastructure.Migrations
 
             modelBuilder.Entity("Imageverse.Domain.UserAggregate.User", b =>
                 {
-                    b.OwnsMany("Imageverse.Domain.PostAggregate.ValueObjects.PostId", "PostIds", b1 =>
+                    b.OwnsMany("Imageverse.Domain.UserAggregate.User.PostIds#Imageverse.Domain.PostAggregate.ValueObjects.PostId", "PostIds", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -283,7 +283,7 @@ namespace Imageverse.Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsMany("Imageverse.Domain.UserActionLogAggregate.ValueObjects.UserActionLogId", "UserActionLogIds", b1 =>
+                    b.OwnsMany("Imageverse.Domain.UserAggregate.User.UserActionLogIds#Imageverse.Domain.UserActionLogAggregate.ValueObjects.UserActionLogId", "UserActionLogIds", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -308,7 +308,32 @@ namespace Imageverse.Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Imageverse.Domain.UserAggregate.Entities.UserStatistics", "UserStatistics", b1 =>
+                    b.OwnsMany("Imageverse.Domain.UserAggregate.User.UserLimitIds#Imageverse.Domain.UserLimitAggregate.ValueObjects.UserLimitId", "UserLimitIds", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<Guid>("Value")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UserLimitId");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("UserId");
+
+                            b1.ToTable("UserLimitIds", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.OwnsOne("Imageverse.Domain.UserAggregate.User.UserStatistics#Imageverse.Domain.UserAggregate.Entities.UserStatistics", "UserStatistics", b1 =>
                         {
                             b1.Property<Guid>("Id")
                                 .HasColumnType("uniqueidentifier")
@@ -344,31 +369,6 @@ namespace Imageverse.Infrastructure.Migrations
                                 .IsUnique();
 
                             b1.ToTable("UserStatistics", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId");
-                        });
-
-                    b.OwnsMany("Imageverse.Domain.UserLimitAggregate.ValueObjects.UserLimitId", "UserLimitIds", b1 =>
-                        {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
-
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<Guid>("Value")
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("UserLimitId");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("UserId");
-
-                            b1.ToTable("UserLimitIds", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");

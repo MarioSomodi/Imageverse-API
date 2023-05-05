@@ -8,7 +8,7 @@ using Imageverse.Domain.UserLimitAggregate.ValueObjects;
 
 namespace Imageverse.Domain.UserAggregate
 {
-    public sealed class User : AggregateRoot<UserId>
+    public sealed class User : AggregateRoot<UserId, Guid>
     {
         private readonly List<PostId> _postIds = new();
         private readonly List<UserActionLogId> _userActionLogIds = new();

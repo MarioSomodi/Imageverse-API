@@ -2,9 +2,9 @@
 
 namespace Imageverse.Domain.PostAggregate.ValueObjects
 {
-    public sealed class ImageId : ValueObject
+    public sealed class ImageId : AggregateRootId<Guid>
     {
-        public Guid Value { get; }
+        public override Guid Value { get; protected set; }
 
         public ImageId(Guid value)
         {
