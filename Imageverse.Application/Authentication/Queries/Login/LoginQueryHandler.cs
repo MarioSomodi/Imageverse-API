@@ -3,7 +3,9 @@ using Imageverse.Application.Authentication.Common;
 using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Domain.Common.Errors;
+using Imageverse.Domain.Models;
 using Imageverse.Domain.UserAggregate;
+using Imageverse.Domain.UserAggregate.Events;
 using MediatR;
 
 namespace Imageverse.Application.Authentication.Queries.Login
@@ -13,12 +15,14 @@ namespace Imageverse.Application.Authentication.Queries.Login
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IPublisher _mediator;
 
-        public LoginQueryHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository, IPasswordHasher passwordHasher)
+        public LoginQueryHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository, IPasswordHasher passwordHasher, IPublisher mediator)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
+            _mediator = mediator;
         }
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
@@ -30,6 +34,8 @@ namespace Imageverse.Application.Authentication.Queries.Login
             }
 
             var token = _jwtTokenGenerator.GenerateToken(user);
+
+            await _mediator.Publish(new UserLoggedIn(user));
 
             return new AuthenticationResult(
                 user,

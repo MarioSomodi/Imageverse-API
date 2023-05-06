@@ -6,9 +6,14 @@ namespace Imageverse.Domain.Common.Errors
     {
         public static class Common
         {
-            public static Error NotFound(string resource)
+            public static Error NotFound(string resource) => Error.NotFound("Common.NotFound", $"Resource : {resource}, that you have requested was not found.");
+
+            public static Error BadRequest(string? customMessage = null)
             {
-                return Error.NotFound("Common.NotFound", $"Resource : {resource}, that you have requested was not found.");
+                var errorMessage = "Bad Request.";
+                if (customMessage != null)
+                    errorMessage = $"{errorMessage} {customMessage}"; 
+                return Error.Custom(400, "Common.BadRequest", errorMessage);
             }
         }
     }

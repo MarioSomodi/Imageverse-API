@@ -1,4 +1,5 @@
 ﻿using Imageverse.Contracts.Packages;
+using Imageverse.Contracts.UserStatistics;
 
 namespace Imageverse.Contracts.Authentication
 {
@@ -13,5 +14,6 @@ namespace Imageverse.Contracts.Authentication
         List<string> PostIds,
         List<string> UserActionLogIds,
         List<string> UserLimitIds,
+        UserStatisticsResponse UserStatistics,
         string Token);
 }

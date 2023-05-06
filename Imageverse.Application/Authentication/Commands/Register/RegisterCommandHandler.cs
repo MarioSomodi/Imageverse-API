@@ -6,6 +6,7 @@ using Imageverse.Domain.Common.Errors;
 using Imageverse.Domain.PackageAggregate.ValueObjects;
 using Imageverse.Domain.UserAggregate;
 using Imageverse.Domain.UserAggregate.Entities;
+using Imageverse.Domain.UserAggregate.Events;
 using MediatR;
 
 namespace Imageverse.Application.Authentication.Commands.Register
@@ -15,12 +16,14 @@ namespace Imageverse.Application.Authentication.Commands.Register
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IPublisher _mediator;
 
-        public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository, IPasswordHasher passwordHasher)
+        public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository, IPasswordHasher passwordHasher, IPublisher mediator)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
+            _mediator = mediator;
         }
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
@@ -30,11 +33,7 @@ namespace Imageverse.Application.Authentication.Commands.Register
                 return Errors.User.DuplicateEmail;
             }
 
-            //Implement controller, repository and mediator logic for creating the package -> this is a mock for now.
-            PackageId packageId = PackageId.CreateUnique();
-
-            //Implement the logic for creating the initial userStatistic object -> this is a mock for now.
-            UserStatistics userStatistics = UserStatistics.Create(1,1,1,1,1);
+            UserStatistics userStatistics = UserStatistics.Create(0,0,0,1,0);
 
             var hashedPassword = _passwordHasher.HashPassword(command.Password, out byte[] salt); 
 
@@ -45,11 +44,13 @@ namespace Imageverse.Application.Authentication.Commands.Register
                 command.Email,
                 command.ProfileImage,
                 hashedPassword,
-                packageId,
+                PackageId.Create(new Guid(command.PackageId)),
                 userStatistics,
                 salt);
 
             await _userRepository.AddAsync(user);
+
+            await _mediator.Publish(new UserRegistered(user));
 
             var token = _jwtTokenGenerator.GenerateToken(user);
 

@@ -17,13 +17,17 @@ namespace Imageverse.Api
 
             var app = builder.Build();
             {
-                app.UseExceptionHandler("/Error");
                 app.UseAuthentication();
                 app.UseAuthorization();
                 if (app.Environment.IsDevelopment())
                 {
+                    app.UseDeveloperExceptionPage();
                     app.UseSwagger()
                        .UseSwaggerUI();
+                }
+                else
+                {
+                    app.UseExceptionHandler("/Error");
                 }
                 app.UseHttpsRedirection();
                 app.MapControllers();

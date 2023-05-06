@@ -18,7 +18,11 @@ namespace Imageverse.Application.Packages.Queries.GetById
 
         public async Task<ErrorOr<Package>> Handle(GetPackageByIdQuery request, CancellationToken cancellationToken)
         {
-            if (await _packageRepository.GetByIdAsync(PackageId.Create(new Guid(request.Id))) is not Package package)
+            if(!Guid.TryParse(request.Id, out var id)) 
+            {
+                return Errors.Common.BadRequest("Invalid Id format.");
+            }
+            if (await _packageRepository.GetByIdAsync(PackageId.Create(id)) is not Package package)
             {
                 return Errors.Common.NotFound(nameof(Package));
             }

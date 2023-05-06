@@ -31,11 +31,12 @@ namespace Imageverse.Api.Controllers
 
         private IActionResult Problem(Error error)
         {
-            var statusCode = error.Type switch
+            var statusCode = error.NumericType switch
             {
-                ErrorType.Conflict => StatusCodes.Status409Conflict,
-                ErrorType.Validation => StatusCodes.Status400BadRequest,
-                ErrorType.NotFound => StatusCodes.Status404NotFound,
+                3 => StatusCodes.Status409Conflict,
+                2 => StatusCodes.Status400BadRequest,
+                4 => StatusCodes.Status404NotFound,
+                400 => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError,
             };
             return Problem(statusCode: statusCode, title: error.Description);

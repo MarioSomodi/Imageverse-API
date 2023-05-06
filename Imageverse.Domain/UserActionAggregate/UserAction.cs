@@ -5,6 +5,7 @@ namespace Imageverse.Domain.UserActionAggregate
 {
     public sealed class UserAction : AggregateRoot<UserActionId>
     {
+        public int Code { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
 

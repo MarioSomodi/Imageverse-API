@@ -53,5 +53,10 @@ namespace Imageverse.Infrastructure.Persistance.Repositories
             _entityDbSet.Update(entity);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task SaveChangesAsync()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

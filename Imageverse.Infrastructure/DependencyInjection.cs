@@ -3,6 +3,7 @@ using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Infrastructure.Authentication;
 using Imageverse.Infrastructure.Persistance;
+using Imageverse.Infrastructure.Persistance.Interceptors;
 using Imageverse.Infrastructure.Persistance.Repositories;
 using Imageverse.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,21 +22,35 @@ namespace Imageverse.Infrastructure
         {
             services
                 .AddAuth(configuration)
-                .AddPersistance(configuration);
+                .AddPersistance(configuration)
+                .AddCustomServices();
 
-            services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
             return services;
         }
 
         public static IServiceCollection AddPersistance(this IServiceCollection services, ConfigurationManager configuration)
         {
-            services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IPackageRepository, PackageRepository>();
+            services.AddScoped<PublishDomainEventsInterceptor>();
+                
+            services
+                .AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IPackageRepository, PackageRepository>()
+                .AddScoped<IUserActionRepository, UserActionRepository>()
+                .AddScoped<IUserActionLogRepository, UserActionLogRepository>();
 
             services.AddDbContext<ImageverseDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("ImageverseDB")));
+
+            return services;
+        }
+
+        public static IServiceCollection AddCustomServices(this IServiceCollection services)
+        {
+            services
+                .AddSingleton<IDateTimeProvider, DateTimeProvider>()
+                .AddScoped<IDatabaseLogger, DatabaseLogger>();
 
             return services;
         }

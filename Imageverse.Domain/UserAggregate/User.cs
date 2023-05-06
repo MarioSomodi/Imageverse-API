@@ -63,7 +63,7 @@ namespace Imageverse.Domain.UserAggregate
             UserStatistics userStatstics,
             byte[] salt)
         {
-            return new(
+            User user = new(
                 UserId.CreateUnique(),
                 username,
                 name,
@@ -74,6 +74,8 @@ namespace Imageverse.Domain.UserAggregate
                 packageId,
                 userStatstics,
                 salt);
+
+            return user;
         }
 
 #pragma warning disable CS8618
