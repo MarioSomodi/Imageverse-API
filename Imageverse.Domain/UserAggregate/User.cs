@@ -78,6 +78,50 @@ namespace Imageverse.Domain.UserAggregate
             return user;
         }
 
+        public User UpdateUsername(User userToUpdate, string username)
+        {
+            userToUpdate.Username = username;
+            return userToUpdate;
+        }
+
+        public User UpdateName(User userToUpdate, string name)
+        {
+            userToUpdate.Name = name;
+            return userToUpdate;
+        }
+
+        public User UpdateSurname(User userToUpdate, string surname)
+        {
+            userToUpdate.Surname = surname;
+            return userToUpdate;
+        }
+
+        public User UpdateEmail(User userToUpdate, string email)
+        {
+            userToUpdate.Email = email;
+            return userToUpdate;
+        }
+        public User UpdateProfileImage(User userToUpdate, string profileImage)
+        {
+            userToUpdate.ProfileImage = profileImage;
+            return userToUpdate;
+        }
+        public User UpdatePassword(User userToUpdate, string password)
+        {
+            userToUpdate.Password = password;
+            return userToUpdate;
+        }
+        public User UpdatePackageId(User userToUpdate, PackageId packageId)
+        {
+            userToUpdate.PackageId = packageId;
+            return userToUpdate;
+        }
+        public User UpdateUserStatistics(User userToUpdate, UserStatistics userStatstics)
+        {
+            userToUpdate.UserStatistics = userStatstics;
+            return userToUpdate;
+        }
+
 #pragma warning disable CS8618
         private User()
         {

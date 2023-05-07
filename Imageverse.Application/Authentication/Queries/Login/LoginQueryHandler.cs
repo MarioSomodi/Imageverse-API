@@ -3,7 +3,6 @@ using Imageverse.Application.Authentication.Common;
 using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Domain.Common.Errors;
-using Imageverse.Domain.Models;
 using Imageverse.Domain.UserAggregate;
 using Imageverse.Domain.UserAggregate.Events;
 using MediatR;

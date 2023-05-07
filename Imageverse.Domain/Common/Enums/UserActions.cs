@@ -3,6 +3,7 @@
     public enum UserActions
     {
         UserRegistered,
-        UserLoggedIn
+        UserLoggedIn,
+        UsersStatisticsUpdated
     }
 }
