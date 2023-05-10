@@ -18,7 +18,8 @@ namespace Imageverse.Application.Authentication.Events
         {
             var user = notification.user;
             await _databaseLogger.LogUserAction(UserActions.UserRegistered, 
-                $"User {user.Name} {user.Surname} with the username {user.Username} and email {user.Email} has registered succesfully.");
+                $"User {user.Name} {user.Surname} with the username {user.Username} and email {user.Email} has registered succesfully.",
+                user);
         }
     }
 }

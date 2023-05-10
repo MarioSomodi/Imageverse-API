@@ -121,6 +121,27 @@ namespace Imageverse.Domain.UserAggregate
             userToUpdate.UserStatistics = userStatstics;
             return userToUpdate;
         }
+        public User UpdateSalt(User userToUpdate, byte[] salt)
+        {
+            userToUpdate.Salt = salt;
+            return userToUpdate;
+        }
+
+        public User AddUserActionLogId(User userToUpdate, UserActionLogId userActionLogId)
+        {
+            userToUpdate._userActionLogIds.Add(userActionLogId);
+            return userToUpdate;
+        }
+        public User AddPostId(User userToUpdate, PostId postId)
+        {
+            userToUpdate._postIds.Add(postId);
+            return userToUpdate;
+        }
+        public User AddUserLimitId(User userToUpdate, UserLimitId userLimitId)
+        {
+            userToUpdate._userLimitIds.Add(userLimitId);
+            return userToUpdate;
+        }
 
 #pragma warning disable CS8618
         private User()
