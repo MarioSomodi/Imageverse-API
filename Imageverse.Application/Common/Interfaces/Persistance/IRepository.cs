@@ -6,11 +6,11 @@
     {
         Task<IEnumerable<T>> GetAllAsync();
         Task<T?> GetByIdAsync(TId id);
-        Task AddAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task DeleteAsync(T entity);
+        Task<bool> AddAsync(T entity);
+        Task<bool> UpdateAsync(T entity);
+        Task<bool> DeleteAsync(T entity);
         Task<T?> GetSingleOrDefaultByPropertyValueAsync(string property, object value);
         Task<IEnumerable<T>> GetAllByPropertyValueAsync(string property, object value);
-        Task SaveChangesAsync();
+        Task<bool> SaveChangesAsync();
     }
 }

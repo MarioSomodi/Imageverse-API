@@ -4,6 +4,9 @@
     {
         UserRegistered,
         UserLoggedIn,
-        UsersStatisticsUpdated
+        UsersStatisticsUpdated,
+        UserChangedEmail,
+        UserChangedPassword,
+        UserInfoChanged,
     }
 }

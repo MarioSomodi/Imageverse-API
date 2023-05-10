@@ -1,6 +1,6 @@
 ﻿using ErrorOr;
 
-namespace Imageverse.Domain.Common.Errors
+namespace Imageverse.Domain.Common.AppErrors
 {
     public static partial class Errors
     {

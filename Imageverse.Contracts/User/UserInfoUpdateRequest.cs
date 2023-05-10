@@ -1,6 +1,6 @@
 ﻿namespace Imageverse.Contracts.User
 {
-    public record UserUpdateRequest(
+    public record UserInfoUpdateRequest(
         string Id,
         string Username,
         string Name,

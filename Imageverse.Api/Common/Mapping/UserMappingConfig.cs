@@ -1,4 +1,6 @@
-﻿using Imageverse.Application.Users.Commands.Update;
+﻿using Imageverse.Application.Users.Commands.UserEmailUpdate;
+using Imageverse.Application.Users.Commands.UserInfoUpdate;
+using Imageverse.Application.Users.Commands.UserPasswordUpdate;
 using Imageverse.Contracts.User;
 using Imageverse.Contracts.UserStatistics;
 using Imageverse.Domain.UserAggregate;
@@ -11,7 +13,9 @@ namespace Imageverse.Api.Common.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<UserUpdateRequest, UserUpdateCommand>();
+            config.NewConfig<UserInfoUpdateRequest, UserInfoUpdateCommand>();
+            config.NewConfig<UserEmailUpdateRequest, UserEmailUpdateCommand>();
+            config.NewConfig<UserPasswordUpdateRequest, UserPasswordUpdateCommand>();
 
             config.NewConfig<UserStatistics, UserStatisticsResponse>()
                 .Map(dest => dest.Id, src => src.Id.Value);

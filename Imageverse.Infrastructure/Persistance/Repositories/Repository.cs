@@ -16,16 +16,16 @@ namespace Imageverse.Infrastructure.Persistance.Repositories
             _entityDbSet = _dbContext.Set<T>();
         }
 
-        public async Task AddAsync(T entity)
+        public async Task<bool> AddAsync(T entity)
         {
             await _entityDbSet.AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
+            return await SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(T entity)
+        public async Task<bool> DeleteAsync(T entity)
         {
             _entityDbSet.Remove(entity);
-            await _dbContext.SaveChangesAsync();
+            return await SaveChangesAsync();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
@@ -48,15 +48,17 @@ namespace Imageverse.Infrastructure.Persistance.Repositories
             return await Task.Run(() => _entityDbSet.ToList().Where(e => e.GetType().GetProperty(property)!.GetValue(e)!.Equals(value)));
         }
 
-        public async Task UpdateAsync(T entity)
+        public async Task<bool> UpdateAsync(T entity)
         {
             _entityDbSet.Update(entity);
-            await _dbContext.SaveChangesAsync();
-        }
+            return await SaveChangesAsync();
+        }   
 
-        public async Task SaveChangesAsync()
+        public async Task<bool> SaveChangesAsync()
         {
-            await _dbContext.SaveChangesAsync();
+            int entitiesWritenToDB = await _dbContext.SaveChangesAsync();
+            if (entitiesWritenToDB > 0) return true;
+            return false;
         }
     }
 }

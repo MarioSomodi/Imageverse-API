@@ -1,6 +1,6 @@
 ﻿using ErrorOr;
 using Imageverse.Application.Common.Interfaces.Persistance;
-using Imageverse.Domain.Common.Errors;
+using Imageverse.Domain.Common.AppErrors;
 using Imageverse.Domain.PackageAggregate;
 using Imageverse.Domain.PackageAggregate.ValueObjects;
 using MediatR;
