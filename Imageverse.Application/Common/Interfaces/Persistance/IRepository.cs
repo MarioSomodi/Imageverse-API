@@ -11,6 +11,7 @@
         Task<bool> DeleteAsync(T entity);
         Task<T?> GetSingleOrDefaultByPropertyValueAsync(string property, object value);
         Task<IEnumerable<T>> GetAllByPropertyValueAsync(string property, object value);
+        Task<IEnumerable<T>> GetMultipleByIds(IEnumerable<TId> entityIds);
         Task<bool> SaveChangesAsync();
     }
 }

@@ -26,7 +26,7 @@ namespace Imageverse.Application.Users.Commands.UserEmailUpdate
             {
                 return Errors.Common.BadRequest("Invalid Id format.");
             }
-            if (await _userRepository.GetByIdAsync(UserId.Create(new Guid(request.Id))) is not User userToUpdate)
+            if (await _userRepository.GetByIdAsync(UserId.Create(id)) is not User userToUpdate)
             {
                 return Errors.Common.NotFound(nameof(User));
             }
@@ -41,8 +41,8 @@ namespace Imageverse.Application.Users.Commands.UserEmailUpdate
             if (success)
             {
                 await _databaseLogger.LogUserAction(UserActions.UserChangedEmail,
-                                                    $"User {userToUpdate.Username} with Id: {userToUpdate.Id} changed his email from {request.Email} to {userToUpdate.Email}.",
-                                                    userToUpdate);
+                                                    $"User {userToUpdate.Username} changed his email from {request.Email} to {userToUpdate.Email}.",
+                                                    userToUpdate.Id);
             }
             
             return success;

@@ -37,6 +37,7 @@ namespace Imageverse.Api.Controllers
                 2 => StatusCodes.Status400BadRequest,
                 4 => StatusCodes.Status404NotFound,
                 400 => StatusCodes.Status400BadRequest,
+                405 => StatusCodes.Status405MethodNotAllowed,
                 _ => StatusCodes.Status500InternalServerError,
             };
             return Problem(statusCode: statusCode, title: error.Description);

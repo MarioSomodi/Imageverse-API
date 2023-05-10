@@ -11,14 +11,14 @@ namespace Imageverse.Domain.UserLimitAggregate
         /// </summary>
         public int AmountOfMBUploaded { get; private set; }
         public int AmountOfImagesUploaded { get; private set; }
-        public int RequestedChangeOfPackage { get; private set; }
+        public bool RequestedChangeOfPackage { get; private set; }
 
         private UserLimit(
             UserLimitId userLimitId,
             DateTime date,
             int amountUploaded,
             int amountOfImagesUploaded,
-            int requestedChangeOfPackage)
+            bool requestedChangeOfPackage)
             : base(userLimitId)
         {
             Date = date;
@@ -30,7 +30,7 @@ namespace Imageverse.Domain.UserLimitAggregate
         public static UserLimit Create(
             int amountUploaded,
             int amountOfImagesUploaded,
-            int requestedChangeOfPackage)
+            bool requestedChangeOfPackage)
         {
             return new(
                 UserLimitId.CreateUnique(),

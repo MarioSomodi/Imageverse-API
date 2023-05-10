@@ -38,7 +38,8 @@ namespace Imageverse.Infrastructure
                 .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IPackageRepository, PackageRepository>()
                 .AddScoped<IUserActionRepository, UserActionRepository>()
-                .AddScoped<IUserActionLogRepository, UserActionLogRepository>();
+                .AddScoped<IUserActionLogRepository, UserActionLogRepository>()
+                .AddScoped<IUserLimitRepository, UserLimitRepository>();
 
             services.AddDbContext<ImageverseDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("ImageverseDB")));

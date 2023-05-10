@@ -2,7 +2,9 @@
 using Imageverse.Application.Authentication.Common;
 using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Persistance;
+using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Domain.Common.AppErrors;
+using Imageverse.Domain.Common.Enums;
 using Imageverse.Domain.PackageAggregate.ValueObjects;
 using Imageverse.Domain.UserAggregate;
 using Imageverse.Domain.UserAggregate.Entities;
@@ -16,14 +18,14 @@ namespace Imageverse.Application.Authentication.Commands.Register
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
-        private readonly IPublisher _mediator;
+        private readonly IDatabaseLogger _databaseLogger;
 
-        public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository, IPasswordHasher passwordHasher, IPublisher mediator)
+        public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository, IPasswordHasher passwordHasher, IDatabaseLogger databaseLogger)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
-            _mediator = mediator;
+            _databaseLogger = databaseLogger;
         }
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
@@ -50,9 +52,11 @@ namespace Imageverse.Application.Authentication.Commands.Register
 
             await _userRepository.AddAsync(user);
 
-            await _mediator.Publish(new UserRegistered(user));
-
             var token = _jwtTokenGenerator.GenerateToken(user);
+            
+            await _databaseLogger.LogUserAction(UserActions.UserRegistered,
+               $"User {user.Name} {user.Surname} with the username {user.Username} and email {user.Email} has registered succesfully.",
+               user.Id);
 
             return new AuthenticationResult(
                 user,

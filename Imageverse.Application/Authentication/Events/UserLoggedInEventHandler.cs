@@ -22,14 +22,14 @@ namespace Imageverse.Application.Authentication.Events
             var user = notification.user;
             await _databaseLogger.LogUserAction(UserActions.UserLoggedIn,
                 $"User {user.Name} {user.Surname} with the username {user.Username} and email {user.Email} has logged in succesfully.",
-                user);
+                user.Id);
 
             user.UserStatistics.UpdateLastLogin(user.UserStatistics)
                                .UpdateTotalTimesLoggedIn(user.UserStatistics, user.UserStatistics.TotalTimesLoggedIn + 1);
             await _userRepository.UpdateAsync(user);
             await _databaseLogger.LogUserAction(UserActions.UsersStatisticsUpdated,
                 $"User with email {user.Email} had his statistics updated.",
-                user);
+                user.Id);
         }
     }
 }

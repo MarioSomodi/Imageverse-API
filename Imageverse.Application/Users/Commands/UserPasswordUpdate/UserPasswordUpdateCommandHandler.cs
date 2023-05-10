@@ -25,7 +25,11 @@ namespace Imageverse.Application.Users.Commands.UserPasswordUpdate
 
         public async Task<ErrorOr<bool>> Handle(UserPasswordUpdateCommand request, CancellationToken cancellationToken)
         {
-            if (await _userRepository.GetByIdAsync(UserId.Create(new Guid(request.Id))) is not User userToUpdate
+            if (!Guid.TryParse(request.Id, out var id))
+            {
+                return Errors.Common.BadRequest("Invalid Id format.");
+            }
+            if (await _userRepository.GetByIdAsync(UserId.Create(id)) is not User userToUpdate
                 || !_passwordHasher.VerifyPassword(request.CurrentPassword, userToUpdate.Password, userToUpdate.Salt))
             {
                 return Errors.Authentication.InvalidPassword;
@@ -41,8 +45,8 @@ namespace Imageverse.Application.Users.Commands.UserPasswordUpdate
             {
                 await _databaseLogger.LogUserAction(
                     UserActions.UserChangedPassword,
-                    $"User with email {userToUpdate.Email} and Id: {userToUpdate.Id} updated his password.",
-                    userToUpdate);
+                    $"User with email {userToUpdate.Email} updated his password.",
+                    userToUpdate.Id);
             }
             return success;
         }

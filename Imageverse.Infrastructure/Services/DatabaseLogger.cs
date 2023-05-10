@@ -5,6 +5,7 @@ using Imageverse.Domain.UserActionAggregate;
 using Imageverse.Domain.UserActionLogAggregate;
 using Imageverse.Domain.UserAggregate;
 using Imageverse.Domain.UserAggregate.Events;
+using Imageverse.Domain.UserAggregate.ValueObjects;
 using MediatR;
 
 namespace Imageverse.Infrastructure.Services
@@ -22,14 +23,14 @@ namespace Imageverse.Infrastructure.Services
             _publisher = publisher;
         }
 
-        public async Task LogUserAction(UserActions userAction, string message, User user)
+        public async Task LogUserAction(UserActions userAction, string message, UserId userId)
         {
             UserAction? action = await _userActionRepository.GetSingleOrDefaultByPropertyValueAsync(nameof(UserAction.Code), (int)userAction);
-            UserActionLog userActionLog = UserActionLog.Create(action!.Id, message);
+            UserActionLog userActionLog = UserActionLog.Create(action!.Id, message + $"User id: {userId.Value}");
             bool success = await _userActionLogRepository.AddAsync(userActionLog);
             if(success)
             {
-                await _publisher.Publish(new UserActionLogLogged(userActionLog.Id, user));
+                await _publisher.Publish(new UserActionLogLogged(userActionLog.Id, userId));
             }
         }
     }

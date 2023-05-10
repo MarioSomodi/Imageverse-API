@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using Imageverse.Application.Users.Commands.UserEmailUpdate;
 using Imageverse.Application.Users.Commands.UserInfoUpdate;
+using Imageverse.Application.Users.Commands.UserPackageChange;
 using Imageverse.Application.Users.Commands.UserPasswordUpdate;
 using Imageverse.Contracts.Common;
 using Imageverse.Contracts.User;
@@ -53,6 +54,18 @@ namespace Imageverse.Api.Controllers
             UserPasswordUpdateCommand userPasswordUpdateCommand = _mapper.Map<UserPasswordUpdateCommand>(updateRequest);
 
             ErrorOr<bool> result = await _mediator.Send(userPasswordUpdateCommand);
+
+            return result.Match(
+                result => Ok(new BoolResponse(result)),
+                errors => Problem(errors));
+        }
+
+        [HttpPut("Package")]
+        public async Task<IActionResult> ChangePackage(UserPackageChangeRequest changeRequest)
+        {
+            UserPackageChangeCommand userPackageChangeCommand = _mapper.Map<UserPackageChangeCommand>(changeRequest);
+
+            ErrorOr<bool> result = await _mediator.Send(userPackageChangeCommand);
 
             return result.Match(
                 result => Ok(new BoolResponse(result)),
