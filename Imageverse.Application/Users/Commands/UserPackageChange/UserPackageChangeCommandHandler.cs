@@ -28,7 +28,6 @@ namespace Imageverse.Application.Users.Commands.UserPackageChange
 
         public async Task<ErrorOr<bool>> Handle(UserPackageChangeCommand request, CancellationToken cancellationToken)
         {
-            //TODO check if the new package == old package
             bool packageCanBeChanged = true;
             DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow);
             if (!Guid.TryParse(request.Id, out var id) || !Guid.TryParse(request.PackageId, out var packageId))
@@ -43,6 +42,10 @@ namespace Imageverse.Application.Users.Commands.UserPackageChange
             if (await _packageRepository.GetByIdAsync(PackageId.Create(packageId)) is not Package packageToChangeTo)
             {
                 return Errors.Common.NotFound(nameof(Package));
+            }
+            if (userToUpdate.PackageId.Equals(packageToChangeTo.Id))
+            {
+                return Errors.User.PackageConflict;
             }
             if (userToUpdate.UserLimitIds.Count > 0)
             {
