@@ -8,5 +8,7 @@
         UserChangedEmail,
         UserChangedPassword,
         UserInfoChanged,
+        UserChangedPackage,
+        NewUserLimitAdded
     }
 }

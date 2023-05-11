@@ -39,6 +39,24 @@ namespace Imageverse.Domain.UserLimitAggregate
                 amountOfImagesUploaded,
                 requestedChangeOfPackage);
         }
+        public UserLimit UpdateRequestedChangeOfPackage(UserLimit userLimitToUpdate, bool value)
+        {
+            userLimitToUpdate.RequestedChangeOfPackage = value;
+            return userLimitToUpdate;
+        }
+
+        public UserLimit UpdateAmountOfImagesUploaded(UserLimit userLimitToUpdate, int value)
+        {
+            userLimitToUpdate.AmountOfImagesUploaded = value;
+            return userLimitToUpdate;
+        }
+
+        public UserLimit UpdateAmountOfMBUploaded(UserLimit userLimitToUpdate, int value)
+        {
+            userLimitToUpdate.AmountOfMBUploaded = value;
+            return userLimitToUpdate;
+        }
+
 
 #pragma warning disable CS8618
         private UserLimit()
