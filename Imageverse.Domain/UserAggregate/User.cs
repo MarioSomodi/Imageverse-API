@@ -21,6 +21,8 @@ namespace Imageverse.Domain.UserAggregate
         public string ProfileImage { get; private set; } 
         public string Password { get; private set; } 
         public PackageId PackageId { get; private set; }
+        public PackageId PreviousPackageId { get; private set; }
+        public DateTime PackageValidFrom { get; private set; }
         public UserStatistics UserStatistics { get; private set; }
         public byte[] Salt { get; private set; }
 
@@ -38,7 +40,9 @@ namespace Imageverse.Domain.UserAggregate
             string password,
             PackageId packageId,
             UserStatistics userStatistics,
-            byte[] salt)
+            byte[] salt,
+            PackageId previousPackageId,
+            DateTime packageValidFrom)
             : base(userId)
         {
             Username = username;
@@ -50,6 +54,8 @@ namespace Imageverse.Domain.UserAggregate
             PackageId = packageId;
             UserStatistics = userStatistics;
             Salt = salt;
+            PreviousPackageId = previousPackageId;
+            PackageValidFrom = packageValidFrom;
         }
 
         public static User Create(
@@ -73,9 +79,20 @@ namespace Imageverse.Domain.UserAggregate
                 password,
                 packageId,
                 userStatstics,
-                salt);
+                salt,
+                packageId,
+                DateTime.UtcNow);
 
             return user;
+        }
+
+        public PackageId GetUsersActivePackage(User user)
+        {
+            if (DateOnly.FromDateTime(DateTime.UtcNow) < DateOnly.FromDateTime(user.PackageValidFrom))
+            {
+                return user.PreviousPackageId;
+            }
+            return user.PackageId;
         }
 
         public User UpdateUsername(User userToUpdate, string username)
@@ -127,16 +144,30 @@ namespace Imageverse.Domain.UserAggregate
             return userToUpdate;
         }
 
+        public User UpdatePreviousPackageId(User userToUpdate, PackageId previousPackageId)
+        {
+            userToUpdate.PreviousPackageId = previousPackageId;
+            return userToUpdate;
+        }
+
+        public User UpdatePackageValidFrom(User userToUpdate, DateTime packageValidFrom)
+        {
+            userToUpdate.PackageValidFrom = packageValidFrom;
+            return userToUpdate;
+        }
+
         public User AddUserActionLogId(User userToUpdate, UserActionLogId userActionLogId)
         {
             userToUpdate._userActionLogIds.Add(userActionLogId);
             return userToUpdate;
         }
+
         public User AddPostId(User userToUpdate, PostId postId)
         {
             userToUpdate._postIds.Add(postId);
             return userToUpdate;
         }
+        
         public User AddUserLimitId(User userToUpdate, UserLimitId userLimitId)
         {
             userToUpdate._userLimitIds.Add(userLimitId);

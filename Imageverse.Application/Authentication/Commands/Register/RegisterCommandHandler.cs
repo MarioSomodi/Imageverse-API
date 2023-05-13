@@ -8,7 +8,6 @@ using Imageverse.Domain.Common.Enums;
 using Imageverse.Domain.PackageAggregate.ValueObjects;
 using Imageverse.Domain.UserAggregate;
 using Imageverse.Domain.UserAggregate.Entities;
-using Imageverse.Domain.UserAggregate.Events;
 using MediatR;
 
 namespace Imageverse.Application.Authentication.Commands.Register

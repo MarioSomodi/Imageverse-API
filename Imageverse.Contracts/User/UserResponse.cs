@@ -10,8 +10,11 @@ namespace Imageverse.Contracts.User
         string Email,
         string ProfileImage,
         string PackageId,
+        string ActivePackageId,
         List<string> PostIds,
         List<string> UserActionLogIds,
         List<string> UserLimitIds,
-        UserStatisticsResponse UserStatistics);
+        UserStatisticsResponse UserStatistics,
+        DateTime PackageValidFrom,
+        string PreviousPackageId);
 }

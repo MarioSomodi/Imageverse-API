@@ -122,6 +122,14 @@ namespace Imageverse.Infrastructure.Persistance.Configurations
                 id => id.Value,
                 //Mapping the id out of the DB to the Aggregate
                 value => PackageId.Create(value));
+            //Each user references their previous Package
+            builder.Property(m => m.PreviousPackageId)
+                .ValueGeneratedNever()
+                .HasConversion(
+                //Mapping the id into the DB from the Aggregate
+                id => id.Value,
+                //Mapping the id out of the DB to the Aggregate
+                value => PackageId.Create(value));
         }
     }
 }

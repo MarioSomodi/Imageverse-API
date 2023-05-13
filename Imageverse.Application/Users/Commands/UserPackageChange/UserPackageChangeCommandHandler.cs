@@ -56,7 +56,9 @@ namespace Imageverse.Application.Users.Commands.UserPackageChange
             }
             if(packageCanBeChanged)
             {
+                userToUpdate.UpdatePreviousPackageId(userToUpdate, userToUpdate.PackageId);
                 userToUpdate.UpdatePackageId(userToUpdate, packageToChangeTo.Id);
+                userToUpdate.UpdatePackageValidFrom(userToUpdate, DateTime.UtcNow.AddDays(1));
                 bool success = await _userRepository.UpdateAsync(userToUpdate);
                 if(success) await _mediator.Publish(new UserChangedPackage(userToUpdate.Id, currentPackageId, packageToChangeTo));
                 return success;

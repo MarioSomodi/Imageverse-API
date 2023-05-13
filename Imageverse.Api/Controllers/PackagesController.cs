@@ -1,10 +1,14 @@
 ﻿using ErrorOr;
+using Imageverse.Application.Packages.Commands.CreatePackage;
+using Imageverse.Application.Packages.Queries.GetAllPackages;
 using Imageverse.Application.Packages.Queries.GetById;
 using Imageverse.Contracts.Packages;
 using Imageverse.Domain.PackageAggregate;
+using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace Imageverse.Api.Controllers
 {
@@ -29,6 +33,26 @@ namespace Imageverse.Api.Controllers
 
             return result.Match(
                 result => Ok(_mapper.Map<PackageResponse>(result)),
+                errors => Problem(errors));
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreatePackage(CreatePackageRequest createPackageRequest)
+        {
+            CreatePackageCommand createPackageCommand = _mapper.Map<CreatePackageCommand>(createPackageRequest);
+
+            ErrorOr<Package> result = await _mediator.Send(createPackageCommand);
+
+            return result.Match(
+                result => Ok(_mapper.Map<PackageResponse>(result)),
+                errors => Problem(errors));
+        }
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            ErrorOr<IEnumerable<Package>> result = await _mediator.Send(new GetAllPackagesCommand());
+
+            return result.Match(
+                result => Ok(result.AsQueryable().ProjectToType<PackageResponse>()),
                 errors => Problem(errors));
         }
     }

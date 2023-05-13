@@ -4,6 +4,7 @@ using Imageverse.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Imageverse.Infrastructure.Migrations
 {
     [DbContext(typeof(ImageverseDbContext))]
-    partial class ImageverseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230513124405_PropertiesNeededForPackageChange")]
+    partial class PropertiesNeededForPackageChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,6 +154,9 @@ namespace Imageverse.Infrastructure.Migrations
 
                     b.Property<Guid>("PreviousPackageId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("PreviousPackageValidTo")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ProfileImage")
                         .IsRequired()
