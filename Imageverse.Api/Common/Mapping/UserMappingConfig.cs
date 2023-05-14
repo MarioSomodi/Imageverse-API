@@ -1,5 +1,6 @@
 ﻿using Imageverse.Application.Users.Commands.UserEmailUpdate;
 using Imageverse.Application.Users.Commands.UserInfoUpdate;
+using Imageverse.Application.Users.Commands.UserIsAdminChange;
 using Imageverse.Application.Users.Commands.UserPackageChange;
 using Imageverse.Application.Users.Commands.UserPasswordUpdate;
 using Imageverse.Contracts.User;
@@ -18,6 +19,7 @@ namespace Imageverse.Api.Common.Mapping
             config.NewConfig<UserEmailUpdateRequest, UserEmailUpdateCommand>();
             config.NewConfig<UserPasswordUpdateRequest, UserPasswordUpdateCommand>();
             config.NewConfig<UserPackageChangeRequest, UserPackageChangeCommand>();
+            config.NewConfig<UserIsAdminChangeRequest, UserIsAdminChangeCommand>();
 
             config.NewConfig<UserStatistics, UserStatisticsResponse>()
                 .Map(dest => dest.Id, src => src.Id.Value);

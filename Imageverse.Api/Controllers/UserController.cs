@@ -1,11 +1,13 @@
 ﻿using ErrorOr;
 using Imageverse.Application.Users.Commands.UserEmailUpdate;
 using Imageverse.Application.Users.Commands.UserInfoUpdate;
+using Imageverse.Application.Users.Commands.UserIsAdminChange;
 using Imageverse.Application.Users.Commands.UserPackageChange;
 using Imageverse.Application.Users.Commands.UserPasswordUpdate;
 using Imageverse.Contracts.Common;
 using Imageverse.Contracts.User;
 using Imageverse.Domain.UserAggregate;
+using Imageverse.Infrastructure.Authentication;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -66,6 +68,19 @@ namespace Imageverse.Api.Controllers
             UserPackageChangeCommand userPackageChangeCommand = _mapper.Map<UserPackageChangeCommand>(changeRequest);
 
             ErrorOr<bool> result = await _mediator.Send(userPackageChangeCommand);
+
+            return result.Match(
+                result => Ok(new BoolResponse(result)),
+                errors => Problem(errors));
+        }
+
+        [Admin]
+        [HttpPut("Admin")]
+        public async Task<IActionResult> MakeAdmin(UserIsAdminChangeRequest changeRequest)
+        {
+            UserIsAdminChangeCommand makeUserAdminCommand = _mapper.Map<UserIsAdminChangeCommand>(changeRequest);
+
+            ErrorOr<bool> result = await _mediator.Send(makeUserAdminCommand);
 
             return result.Match(
                 result => Ok(new BoolResponse(result)),
