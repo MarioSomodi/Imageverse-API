@@ -4,11 +4,11 @@ using Imageverse.Application.Packages.Queries.GetAllPackages;
 using Imageverse.Application.Packages.Queries.GetById;
 using Imageverse.Contracts.Packages;
 using Imageverse.Domain.PackageAggregate;
+using Imageverse.Infrastructure.Authentication;
 using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace Imageverse.Api.Controllers
 {
@@ -35,6 +35,8 @@ namespace Imageverse.Api.Controllers
                 result => Ok(_mapper.Map<PackageResponse>(result)),
                 errors => Problem(errors));
         }
+
+        [Admin]
         [HttpPost]
         public async Task<IActionResult> CreatePackage(CreatePackageRequest createPackageRequest)
         {
@@ -46,6 +48,7 @@ namespace Imageverse.Api.Controllers
                 result => Ok(_mapper.Map<PackageResponse>(result)),
                 errors => Problem(errors));
         }
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {

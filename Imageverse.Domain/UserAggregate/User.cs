@@ -26,6 +26,8 @@ namespace Imageverse.Domain.UserAggregate
         public UserStatistics UserStatistics { get; private set; }
         public byte[] Salt { get; private set; }
 
+        public bool IsAdmin { get; private set; }
+
         public IReadOnlyList<PostId> PostIds => _postIds.AsReadOnly();
         public IReadOnlyList<UserActionLogId> UserActionLogIds => _userActionLogIds.AsReadOnly();
         public IReadOnlyList<UserLimitId> UserLimitIds => _userLimitIds.AsReadOnly();
@@ -42,7 +44,8 @@ namespace Imageverse.Domain.UserAggregate
             UserStatistics userStatistics,
             byte[] salt,
             PackageId previousPackageId,
-            DateTime packageValidFrom)
+            DateTime packageValidFrom,
+            bool isAdmin)
             : base(userId)
         {
             Username = username;
@@ -56,6 +59,7 @@ namespace Imageverse.Domain.UserAggregate
             Salt = salt;
             PreviousPackageId = previousPackageId;
             PackageValidFrom = packageValidFrom;
+            IsAdmin = isAdmin;
         }
 
         public static User Create(
@@ -81,7 +85,8 @@ namespace Imageverse.Domain.UserAggregate
                 userStatstics,
                 salt,
                 packageId,
-                DateTime.UtcNow);
+                DateTime.UtcNow,
+                false);
 
             return user;
         }
@@ -171,6 +176,12 @@ namespace Imageverse.Domain.UserAggregate
         public User AddUserLimitId(User userToUpdate, UserLimitId userLimitId)
         {
             userToUpdate._userLimitIds.Add(userLimitId);
+            return userToUpdate;
+        }
+
+        public User UpdateIsAdmin(User userToUpdate, bool isAdmin)
+        {
+            userToUpdate.IsAdmin = isAdmin;
             return userToUpdate;
         }
 

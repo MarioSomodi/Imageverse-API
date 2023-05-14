@@ -28,9 +28,10 @@ namespace Imageverse.Infrastructure.Authentication
             
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.Value.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.Name),
-                new Claim(JwtRegisteredClaimNames.FamilyName, user.Surname)
+                new Claim(JwtRegisteredClaimNames.FamilyName, user.Surname),
             };
 
             var securityToken = new JwtSecurityToken(issuer: _jwtSettings.Issuer,
