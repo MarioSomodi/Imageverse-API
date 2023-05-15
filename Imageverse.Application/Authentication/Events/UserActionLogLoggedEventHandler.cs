@@ -1,4 +1,5 @@
-﻿using Imageverse.Application.Common.Interfaces.Persistance;
+﻿using Imageverse.Application.Common.Interfaces;
+using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Domain.UserAggregate;
 using Imageverse.Domain.UserAggregate.Events;
 using MediatR;
@@ -7,18 +8,19 @@ namespace Imageverse.Application.Authentication.Events
 {
     public class UserActionLogLoggedEventHandler : INotificationHandler<UserActionLogLogged>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserActionLogLoggedEventHandler(IUserRepository userRepository)
+        public UserActionLogLoggedEventHandler(IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task Handle(UserActionLogLogged notification, CancellationToken cancellationToken)
         {
-            User? user = await _userRepository.GetByIdAsync(notification.userId);
+            User? user = await _unitOfWork.GetRepository<IUserRepository>().FindById(notification.userId);
             user!.AddUserActionLogId(user, notification.userActionLogId);
-            await _userRepository.UpdateAsync(user);
+            _unitOfWork.GetRepository<IUserRepository>().Update(user);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

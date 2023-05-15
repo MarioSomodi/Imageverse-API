@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Imageverse.Application.Common.Interfaces;
 using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Domain.Common.AppErrors;
 using Imageverse.Domain.PackageAggregate;
@@ -9,11 +10,11 @@ namespace Imageverse.Application.Packages.Queries.GetById
 {
     public class GetPackageByIdQueryHandler : IRequestHandler<GetPackageByIdQuery, ErrorOr<Package>>
     {
-        private readonly IPackageRepository _packageRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetPackageByIdQueryHandler(IPackageRepository packageRepository)
+        public GetPackageByIdQueryHandler(IUnitOfWork unitOfWork)
         {
-            _packageRepository = packageRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ErrorOr<Package>> Handle(GetPackageByIdQuery request, CancellationToken cancellationToken)
@@ -22,7 +23,7 @@ namespace Imageverse.Application.Packages.Queries.GetById
             {
                 return Errors.Common.BadRequest("Invalid Id format.");
             }
-            if (await _packageRepository.GetByIdAsync(PackageId.Create(id)) is not Package package)
+            if (await _unitOfWork.GetRepository<IPackageRepository>().FindById(PackageId.Create(id)) is not Package package)
             {
                 return Errors.Common.NotFound(nameof(Package));
             }

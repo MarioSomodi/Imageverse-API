@@ -1,17 +1,20 @@
-﻿namespace Imageverse.Application.Common.Interfaces.Persistance
+﻿using System.Linq.Expressions;
+
+namespace Imageverse.Application.Common.Interfaces.Persistance
 {
-    public interface IRepository<T, TId>
+    public interface IRepository<T, TId> : IRepositoryMarker
         where T : class
         where TId : class
     {
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<T?> GetByIdAsync(TId id);
-        Task<bool> AddAsync(T entity);
-        Task<bool> UpdateAsync(T entity);
-        Task<bool> DeleteAsync(T entity);
-        Task<T?> GetSingleOrDefaultByPropertyValueAsync(string property, object value);
-        Task<IEnumerable<T>> GetAllByPropertyValueAsync(string property, object value);
-        Task<IEnumerable<T>> GetMultipleByIds(IEnumerable<TId> entityIds);
-        Task<bool> SaveChangesAsync();
+        Task<T?> FindById(TId id);
+        Task AddAsync(T entity);
+        void Update(T entity);
+        void Delete(T entity);
+        Task<T?> GetSingleOrDefaultAsync(Expression<Func<T, bool>> predicate);
+        Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> FindAllById(IEnumerable<TId> entityIds);
+        Task<IEnumerable<T>> Get(
+            Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Imageverse.Application.Common.Interfaces;
 using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Domain.Common.AppErrors;
@@ -11,13 +12,13 @@ namespace Imageverse.Application.Users.Commands.UserInfoUpdate
 {
     public class UserInfoUpdateCommandHandler : IRequestHandler<UserInfoUpdateCommand, ErrorOr<User>>
     {
-        private readonly IUserRepository _userRepository;
         private readonly IDatabaseLogger _databaseLogger;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserInfoUpdateCommandHandler(IUserRepository userRepository, IDatabaseLogger databaseLogger)
+        public UserInfoUpdateCommandHandler(IDatabaseLogger databaseLogger, IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
             _databaseLogger = databaseLogger;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ErrorOr<User>> Handle(UserInfoUpdateCommand request, CancellationToken cancellationToken)
@@ -26,7 +27,7 @@ namespace Imageverse.Application.Users.Commands.UserInfoUpdate
             {
                 return Errors.Common.BadRequest("Invalid Id format.");
             }
-            if (await _userRepository.GetByIdAsync(UserId.Create(id)) is not User userToUpdate)
+            if (await _unitOfWork.GetRepository<IUserRepository>().FindById(UserId.Create(id)) is not User userToUpdate)
             {
                 return Errors.Common.NotFound(nameof(User));
             }
@@ -49,12 +50,16 @@ namespace Imageverse.Application.Users.Commands.UserInfoUpdate
                 userToUpdate.UpdateSurname(userToUpdate, request.Surname!);
                 updatedProperties += $"{nameof(request.Surname)} ";
             }
-            await _userRepository.UpdateAsync(userToUpdate);
 
-            await _databaseLogger.LogUserAction(
-                UserActions.UserInfoChanged,
-                $"User with email {userToUpdate.Email} updated his info ({updatedProperties}).",
-                userToUpdate.Id);
+            _unitOfWork.GetRepository<IUserRepository>().Update(userToUpdate);
+
+            bool success = await _unitOfWork.CommitAsync();
+
+            if(success)
+                await _databaseLogger.LogUserAction(
+                    UserActions.UserInfoChanged,
+                    $"User with email {userToUpdate.Email} updated his info ({updatedProperties}).",
+                    userToUpdate.Id);
 
             return userToUpdate;
         }

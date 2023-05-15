@@ -1,5 +1,6 @@
 ﻿using Imageverse.Application.Common.Interfaces.Persistance;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Imageverse.Infrastructure.Persistance.Repositories
 {
@@ -16,61 +17,63 @@ namespace Imageverse.Infrastructure.Persistance.Repositories
             _entityDbSet = _dbContext.Set<T>();
         }
 
-
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<T?> FindById(TId id)
         {
-            return await _entityDbSet.ToListAsync();
+            return await _entityDbSet.FindAsync(id);
         }
 
-        public async Task<T?> GetByIdAsync(TId id)
+        public async Task<T?> GetSingleOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
-            return await Task.Run(() => _entityDbSet.ToList().SingleOrDefault(e => e.GetType().GetProperty("Id")!.GetValue(e)!.Equals(id)));
+            return await _entityDbSet.SingleOrDefaultAsync(predicate);
         }
 
-        public async Task<T?> GetSingleOrDefaultByPropertyValueAsync(string property, object value)
+        public async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
-            return await Task.Run(() => _entityDbSet.ToList().SingleOrDefault(e => e.GetType().GetProperty(property)!.GetValue(e)!.Equals(value)));
+            return await _entityDbSet.FirstOrDefaultAsync(predicate);
         }
 
-        public async Task<IEnumerable<T>> GetAllByPropertyValueAsync(string property, object value)
+        public async Task<IEnumerable<T>> Get(
+            Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
         {
-            return await Task.Run(() => _entityDbSet.ToList().Where(e => e.GetType().GetProperty(property)!.GetValue(e)!.Equals(value)));
-        }
+            IQueryable<T> query = _entityDbSet;
 
-        public async Task<IEnumerable<T>> GetMultipleByIds(IEnumerable<TId> entityIds)
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (orderBy != null)
+            {
+                return orderBy(query).ToList();
+            }
+
+            return await query.ToListAsync();
+        }
+        public async Task<IEnumerable<T>> FindAllById(IEnumerable<TId> entityIds)
         {
             List<T> entities = new();
             foreach(var entityId in entityIds)
             {
-                T? entity = await Task.Run(() => _entityDbSet.ToList().SingleOrDefault(e => e.GetType().GetProperty("Id")!.GetValue(e)!.Equals(entityId)));
+                T? entity = await _entityDbSet.FindAsync(entityId);
                 entities.Add(entity!);
             }
             return entities;
         }
 
-        public async Task<bool> AddAsync(T entity)
+        public async Task AddAsync(T entity)
         {
             await _entityDbSet.AddAsync(entity);
-            return await SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteAsync(T entity)
+        public void Delete(T entity)
         {
             _entityDbSet.Remove(entity);
-            return await SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateAsync(T entity)
+        public void Update(T entity)
         {
             _entityDbSet.Update(entity);
-            return await SaveChangesAsync();
         }   
-
-        public async Task<bool> SaveChangesAsync()
-        {
-            int entitiesWritenToDB = await _dbContext.SaveChangesAsync();
-            if (entitiesWritenToDB > 0) return true;
-            return false;
-        }
     }
 }

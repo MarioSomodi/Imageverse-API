@@ -7,20 +7,21 @@ using Imageverse.Domain.Common.AppErrors;
 using Imageverse.Domain.UserAggregate.ValueObjects;
 using MediatR;
 using Imageverse.Domain.Common.Enums;
+using Imageverse.Application.Common.Interfaces;
 
 namespace Imageverse.Application.Users.Commands.UserPasswordUpdate
 {
     public class UserPasswordUpdateCommandHandler : IRequestHandler<UserPasswordUpdateCommand, ErrorOr<bool>>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IDatabaseLogger _databaseLogger;
         private readonly IPasswordHasher _passwordHasher;
 
-        public UserPasswordUpdateCommandHandler(IDatabaseLogger databaseLogger, IUserRepository userRepository, IPasswordHasher passwordHasher)
+        public UserPasswordUpdateCommandHandler(IDatabaseLogger databaseLogger, IPasswordHasher passwordHasher, IUnitOfWork unitOfWork)
         {
             _databaseLogger = databaseLogger;
-            _userRepository = userRepository;
             _passwordHasher = passwordHasher;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ErrorOr<bool>> Handle(UserPasswordUpdateCommand request, CancellationToken cancellationToken)
@@ -29,7 +30,7 @@ namespace Imageverse.Application.Users.Commands.UserPasswordUpdate
             {
                 return Errors.Common.BadRequest("Invalid Id format.");
             }
-            if (await _userRepository.GetByIdAsync(UserId.Create(id)) is not User userToUpdate
+            if (await _unitOfWork.GetRepository<IUserRepository>().FindById(UserId.Create(id)) is not User userToUpdate
                 || !_passwordHasher.VerifyPassword(request.CurrentPassword, userToUpdate.Password, userToUpdate.Salt))
             {
                 return Errors.Authentication.InvalidPassword;
@@ -40,7 +41,8 @@ namespace Imageverse.Application.Users.Commands.UserPasswordUpdate
             userToUpdate.UpdatePassword(userToUpdate, hashedNewPassword);
             userToUpdate.UpdateSalt(userToUpdate, newSalt);
 
-            bool success = await _userRepository.UpdateAsync(userToUpdate);
+            _unitOfWork.GetRepository<IUserRepository>().Update(userToUpdate);
+            bool success = await _unitOfWork.CommitAsync();
             if (success)
             {
                 await _databaseLogger.LogUserAction(

@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using Imageverse.Application.Authentication.Common;
+using Imageverse.Application.Common.Interfaces;
 using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
@@ -14,22 +15,22 @@ namespace Imageverse.Application.Authentication.Commands.Register
 {
     public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
-        private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IDatabaseLogger _databaseLogger;
 
-        public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository, IPasswordHasher passwordHasher, IDatabaseLogger databaseLogger)
+        public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IPasswordHasher passwordHasher, IDatabaseLogger databaseLogger, IUnitOfWork unitOfWork)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
-            _userRepository = userRepository;
             _passwordHasher = passwordHasher;
             _databaseLogger = databaseLogger;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
-            if (await _userRepository.GetSingleOrDefaultByPropertyValueAsync(nameof(command.Email), command.Email) is not null)
+            if (await _unitOfWork.GetRepository<IUserRepository>().GetSingleOrDefaultAsync(u => u.Email == command.Email) is not null)
             {
                 return Errors.User.DuplicateEmail;
             }
@@ -49,7 +50,8 @@ namespace Imageverse.Application.Authentication.Commands.Register
                 userStatistics,
                 salt);
 
-            await _userRepository.AddAsync(user);
+            await _unitOfWork.GetRepository<IUserRepository>().AddAsync(user);
+            await _unitOfWork.CommitAsync();
 
             var token = _jwtTokenGenerator.GenerateToken(user);
             

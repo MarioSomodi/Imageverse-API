@@ -1,4 +1,5 @@
-﻿using Imageverse.Application.Common.Interfaces.Persistance;
+﻿using Imageverse.Application.Common.Interfaces;
+using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Domain.UserLimitAggregate.Events;
 using MediatR;
 
@@ -6,17 +7,18 @@ namespace Imageverse.Application.Users.Events
 {
     public class UserLimitAddedEventHandler : INotificationHandler<UserLimitAdded>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserLimitAddedEventHandler(IUserRepository userRepository)
+        public UserLimitAddedEventHandler(IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task Handle(UserLimitAdded notification, CancellationToken cancellationToken)
         {
             notification.User.AddUserLimitId(notification.User, notification.userLimitId);
-            await _userRepository.UpdateAsync(notification.User);
+            _unitOfWork.GetRepository<IUserRepository>().Update(notification.User);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

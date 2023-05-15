@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Imageverse.Application.Common.Interfaces;
 using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Domain.Common.AppErrors;
@@ -11,13 +12,13 @@ namespace Imageverse.Application.Users.Commands.UserEmailUpdate
 {
     public class UserEmailUpdateCommandHandler : IRequestHandler<UserEmailUpdateCommand, ErrorOr<bool>>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IDatabaseLogger _databaseLogger;
 
-        public UserEmailUpdateCommandHandler(IUserRepository userRepository, IDatabaseLogger databaseLogger)
+        public UserEmailUpdateCommandHandler(IDatabaseLogger databaseLogger, IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
             _databaseLogger = databaseLogger;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ErrorOr<bool>> Handle(UserEmailUpdateCommand request, CancellationToken cancellationToken)
@@ -26,18 +27,18 @@ namespace Imageverse.Application.Users.Commands.UserEmailUpdate
             {
                 return Errors.Common.BadRequest("Invalid Id format.");
             }
-            if (await _userRepository.GetByIdAsync(UserId.Create(id)) is not User userToUpdate)
+            if (await _unitOfWork.GetRepository<IUserRepository>().FindById(UserId.Create(id)) is not User userToUpdate)
             {
                 return Errors.Common.NotFound(nameof(User));
             }
-            if (await _userRepository.GetSingleOrDefaultByPropertyValueAsync(nameof(request.Email), request.Email) is User userWithSameEmail)
+            if (await _unitOfWork.GetRepository<IUserRepository>().GetSingleOrDefaultAsync(u => u.Email == request.Email) is User userWithSameEmail)
             {
                 return Errors.User.DuplicateEmail;
             }
             userToUpdate.UpdateEmail(userToUpdate, request.Email);
 
-            bool success = await _userRepository.UpdateAsync(userToUpdate);
-
+            _unitOfWork.GetRepository<IUserRepository>().Update(userToUpdate);
+            bool success = await _unitOfWork.CommitAsync();
             if (success)
             {
                 await _databaseLogger.LogUserAction(UserActions.UserChangedEmail,

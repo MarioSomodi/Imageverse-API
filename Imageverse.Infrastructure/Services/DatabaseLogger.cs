@@ -1,4 +1,5 @@
-﻿using Imageverse.Application.Common.Interfaces.Persistance;
+﻿using Imageverse.Application.Common.Interfaces;
+using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Domain.Common.Enums;
 using Imageverse.Domain.UserActionAggregate;
@@ -12,22 +13,21 @@ namespace Imageverse.Infrastructure.Services
 {
     public class DatabaseLogger : IDatabaseLogger
     {
-        private readonly IUserActionRepository _userActionRepository;
-        private readonly IUserActionLogRepository _userActionLogRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IPublisher _publisher;
 
-        public DatabaseLogger(IUserActionLogRepository userActionLogRepository, IUserActionRepository userActionRepository, IPublisher publisher)
+        public DatabaseLogger(IPublisher publisher, IUnitOfWork unitOfWork)
         {
-            _userActionLogRepository = userActionLogRepository;
-            _userActionRepository = userActionRepository;
             _publisher = publisher;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task LogUserAction(UserActions userAction, string message, UserId userId)
         {
-            UserAction? action = await _userActionRepository.GetSingleOrDefaultByPropertyValueAsync(nameof(UserAction.Code), (int)userAction);
+            UserAction? action = await _unitOfWork.GetRepository<IUserActionRepository>().GetSingleOrDefaultAsync(uA => uA.Code == (int)userAction);
             UserActionLog userActionLog = UserActionLog.Create(action!.Id, message + $"User id: {userId.Value}");
-            bool success = await _userActionLogRepository.AddAsync(userActionLog);
+            await _unitOfWork.GetRepository<IUserActionLogRepository>().AddAsync(userActionLog);
+            bool success = await _unitOfWork.CommitAsync();
             if(success)
             {
                 await _publisher.Publish(new UserActionLogLogged(userActionLog.Id, userId));

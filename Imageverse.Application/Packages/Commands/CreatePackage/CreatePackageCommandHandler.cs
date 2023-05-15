@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Imageverse.Application.Common.Interfaces;
 using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Domain.PackageAggregate;
@@ -8,13 +9,13 @@ namespace Imageverse.Application.Packages.Commands.CreatePackage
 {
     public class CreatePackageCommandHandler : IRequestHandler<CreatePackageCommand, ErrorOr<Package>>
     {
-        private readonly IPackageRepository _packageRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IDatabaseLogger _databaseLogger;
 
-        public CreatePackageCommandHandler(IPackageRepository packageRepository, IDatabaseLogger databaseLogger)
+        public CreatePackageCommandHandler(IDatabaseLogger databaseLogger, IUnitOfWork unitOfWork)
         {
-            _packageRepository = packageRepository;
             _databaseLogger = databaseLogger;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ErrorOr<Package>> Handle(CreatePackageCommand request, CancellationToken cancellationToken)
@@ -25,7 +26,8 @@ namespace Imageverse.Application.Packages.Commands.CreatePackage
                 request.UploadSizeLimit,
                 request.DailyUploadLimit,
                 request.DailyImageUploadLimit);
-            await _packageRepository.AddAsync(package);
+            await _unitOfWork.GetRepository<IPackageRepository>().AddAsync(package);
+            await _unitOfWork.CommitAsync();
             return package;
         }
     }

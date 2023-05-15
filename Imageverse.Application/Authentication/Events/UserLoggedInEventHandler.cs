@@ -1,4 +1,5 @@
-﻿using Imageverse.Application.Common.Interfaces.Persistance;
+﻿using Imageverse.Application.Common.Interfaces;
+using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Domain.Common.Enums;
 using Imageverse.Domain.UserAggregate.Events;
@@ -9,12 +10,12 @@ namespace Imageverse.Application.Authentication.Events
     public class UserLoggedInEventHandler : INotificationHandler<UserLoggedIn>
     {
         private readonly IDatabaseLogger _databaseLogger;
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserLoggedInEventHandler(IDatabaseLogger databaseLogger, IUserRepository userRepository)
+        public UserLoggedInEventHandler(IDatabaseLogger databaseLogger, IUnitOfWork unitOfWork)
         {
             _databaseLogger = databaseLogger;
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task Handle(UserLoggedIn notification, CancellationToken cancellationToken)
@@ -26,7 +27,8 @@ namespace Imageverse.Application.Authentication.Events
 
             user.UserStatistics.UpdateLastLogin(user.UserStatistics)
                                .UpdateTotalTimesLoggedIn(user.UserStatistics, user.UserStatistics.TotalTimesLoggedIn + 1);
-            await _userRepository.UpdateAsync(user);
+            _unitOfWork.GetRepository<IUserRepository>().Update(user);
+            await _unitOfWork.CommitAsync();
             await _databaseLogger.LogUserAction(UserActions.UsersStatisticsUpdated,
                 $"User with email {user.Email} had his statistics updated.",
                 user.Id);

@@ -8,22 +8,19 @@ using Imageverse.Domain.UserLimitAggregate;
 using Imageverse.Domain.PackageAggregate.ValueObjects;
 using Imageverse.Domain.PackageAggregate;
 using Imageverse.Domain.UserAggregate.Events;
+using Imageverse.Application.Common.Interfaces;
 
 namespace Imageverse.Application.Users.Commands.UserPackageChange
 {
     public class UserPackageChangeCommandHandler : IRequestHandler<UserPackageChangeCommand, ErrorOr<bool>>
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IPackageRepository _packageRepository;
-        private readonly IUserLimitRepository _userLimitRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IPublisher _mediator;
 
-        public UserPackageChangeCommandHandler(IPublisher mediator, IPackageRepository packageRepository, IUserRepository userRepository, IUserLimitRepository userLimitRepository)
+        public UserPackageChangeCommandHandler(IPublisher mediator, IUnitOfWork unitOfWork)
         {
             _mediator = mediator;
-            _packageRepository = packageRepository;
-            _userRepository = userRepository;
-            _userLimitRepository = userLimitRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ErrorOr<bool>> Handle(UserPackageChangeCommand request, CancellationToken cancellationToken)
@@ -34,12 +31,12 @@ namespace Imageverse.Application.Users.Commands.UserPackageChange
             {
                 return Errors.Common.BadRequest("Invalid Id format.");
             }
-            if (await _userRepository.GetByIdAsync(UserId.Create(id)) is not User userToUpdate)
+            if (await _unitOfWork.GetRepository<IUserRepository>().FindById(UserId.Create(id)) is not User userToUpdate)
             {
                 return Errors.Common.NotFound(nameof(User));
             }
             PackageId currentPackageId = userToUpdate.PackageId;
-            if (await _packageRepository.GetByIdAsync(PackageId.Create(packageId)) is not Package packageToChangeTo)
+            if (await _unitOfWork.GetRepository<IPackageRepository>().FindById(PackageId.Create(packageId)) is not Package packageToChangeTo)
             {
                 return Errors.Common.NotFound(nameof(Package));
             }
@@ -49,7 +46,7 @@ namespace Imageverse.Application.Users.Commands.UserPackageChange
             }
             if (userToUpdate.UserLimitIds.Count > 0)
             {
-                List<UserLimit> userLimits = (List<UserLimit>)await _userLimitRepository.GetMultipleByIds(userToUpdate.UserLimitIds);
+                List<UserLimit> userLimits = (List<UserLimit>)await _unitOfWork.GetRepository<IUserLimitRepository>().FindAllById(userToUpdate.UserLimitIds);
                 UserLimit? userLimit = userLimits.Where(uL => DateOnly.FromDateTime(uL.Date) == currentDate).FirstOrDefault();
                 if(userLimit is not null && userLimit.RequestedChangeOfPackage)
                     packageCanBeChanged = false;
@@ -59,8 +56,9 @@ namespace Imageverse.Application.Users.Commands.UserPackageChange
                 userToUpdate.UpdatePreviousPackageId(userToUpdate, userToUpdate.PackageId);
                 userToUpdate.UpdatePackageId(userToUpdate, packageToChangeTo.Id);
                 userToUpdate.UpdatePackageValidFrom(userToUpdate, DateTime.UtcNow.AddDays(1));
-                bool success = await _userRepository.UpdateAsync(userToUpdate);
-                if(success) await _mediator.Publish(new UserChangedPackage(userToUpdate.Id, currentPackageId, packageToChangeTo));
+                _unitOfWork.GetRepository<IUserRepository>().Update(userToUpdate);
+                bool success = await _unitOfWork.CommitAsync();
+                if (success) await _mediator.Publish(new UserChangedPackage(userToUpdate.Id, currentPackageId, packageToChangeTo));
                 return success;
             }
             return Errors.Common.MethodNotAllowed("Cannot change package more than once a day.");

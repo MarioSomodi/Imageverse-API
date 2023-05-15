@@ -1,4 +1,5 @@
-﻿using Imageverse.Application.Common.Interfaces.Persistance;
+﻿using Imageverse.Application.Common.Interfaces;
+using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Domain.UserAggregate;
 using Imageverse.Domain.UserAggregate.ValueObjects;
 using Microsoft.AspNetCore.Http;
@@ -10,18 +11,18 @@ namespace Imageverse.Infrastructure.Authentication
 {
     internal class AdminFilter : IAsyncAuthorizationFilter
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IUserRepository _userRepository;
-        public AdminFilter(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
+        public AdminFilter(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
         {
             _httpContextAccessor = httpContextAccessor;
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             string userId = _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-            User? user = await _userRepository.GetByIdAsync(UserId.Create(new Guid(userId)));
+            User? user = await _unitOfWork.GetRepository<IUserRepository>().FindById(UserId.Create(new Guid(userId)));
             if (!user!.IsAdmin)
             {
                 context.Result = new ForbidResult();

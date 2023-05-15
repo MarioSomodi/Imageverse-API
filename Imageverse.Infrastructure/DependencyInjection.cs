@@ -1,4 +1,5 @@
-﻿using Imageverse.Application.Common.Interfaces.Authentication;
+﻿using Imageverse.Application.Common.Interfaces;
+using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Infrastructure.Authentication;
@@ -34,12 +35,7 @@ namespace Imageverse.Infrastructure
             services.AddScoped<PublishDomainEventsInterceptor>();
                 
             services
-                .AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
-                .AddScoped<IUserRepository, UserRepository>()
-                .AddScoped<IPackageRepository, PackageRepository>()
-                .AddScoped<IUserActionRepository, UserActionRepository>()
-                .AddScoped<IUserActionLogRepository, UserActionLogRepository>()
-                .AddScoped<IUserLimitRepository, UserLimitRepository>();
+                .AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddDbContext<ImageverseDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("ImageverseDB")));
