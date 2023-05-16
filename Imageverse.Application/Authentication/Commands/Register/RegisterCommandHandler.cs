@@ -4,6 +4,7 @@ using Imageverse.Application.Common.Interfaces;
 using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
+using Imageverse.Domain.Common;
 using Imageverse.Domain.Common.AppErrors;
 using Imageverse.Domain.Common.Enums;
 using Imageverse.Domain.PackageAggregate.ValueObjects;
@@ -37,7 +38,9 @@ namespace Imageverse.Application.Authentication.Commands.Register
 
             UserStatistics userStatistics = UserStatistics.Create(0,0,0,1,0);
 
-            var hashedPassword = _passwordHasher.HashPassword(command.Password, out byte[] salt); 
+            var hashedPassword = _passwordHasher.HashPassword(command.Password, out byte[] salt);
+
+            RefreshTokenResult refreshTokenResult = _jwtTokenGenerator.GenerateRefreshToken();
 
             User user = User.Create(
                 command.Username,
@@ -48,7 +51,9 @@ namespace Imageverse.Application.Authentication.Commands.Register
                 hashedPassword,
                 PackageId.Create(new Guid(command.PackageId)),
                 userStatistics,
-                salt);
+                salt,
+                refreshTokenResult.RefreshToken,
+                refreshTokenResult.RefreshTokenExpiry);
 
             await _unitOfWork.GetRepository<IUserRepository>().AddAsync(user);
             await _unitOfWork.CommitAsync();

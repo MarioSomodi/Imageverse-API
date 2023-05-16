@@ -30,7 +30,7 @@ namespace Imageverse.Application.Users.Commands.UserPasswordUpdate
             {
                 return Errors.Common.BadRequest("Invalid Id format.");
             }
-            if (await _unitOfWork.GetRepository<IUserRepository>().FindById(UserId.Create(id)) is not User userToUpdate
+            if (await _unitOfWork.GetRepository<IUserRepository>().FindByIdAsync(UserId.Create(id)) is not User userToUpdate
                 || !_passwordHasher.VerifyPassword(request.CurrentPassword, userToUpdate.Password, userToUpdate.Salt))
             {
                 return Errors.Authentication.InvalidPassword;

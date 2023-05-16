@@ -1,6 +1,7 @@
 ﻿using Imageverse.Application.Authentication.Commands.Register;
 using Imageverse.Application.Authentication.Common;
 using Imageverse.Application.Authentication.Queries.Login;
+using Imageverse.Application.Authentication.Queries.Refresh;
 using Imageverse.Contracts.Authentication;
 using Mapster;
 
@@ -14,6 +15,7 @@ namespace Imageverse.Api.Common.Mapping
             //and also to see all used mappings
             config.NewConfig<RegisterRequest, RegisterCommand>();
             config.NewConfig<LoginRequest, LoginQuery>();
+            config.NewConfig<RefreshRequest, RefreshQuery>();
             config.NewConfig<AuthenticationResult, AuthenticationResponse>();
         }
     }

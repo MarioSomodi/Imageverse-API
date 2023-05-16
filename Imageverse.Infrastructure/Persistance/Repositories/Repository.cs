@@ -17,7 +17,7 @@ namespace Imageverse.Infrastructure.Persistance.Repositories
             _entityDbSet = _dbContext.Set<T>();
         }
 
-        public async Task<T?> FindById(TId id)
+        public async Task<T?> FindByIdAsync(TId id)
         {
             return await _entityDbSet.FindAsync(id);
         }

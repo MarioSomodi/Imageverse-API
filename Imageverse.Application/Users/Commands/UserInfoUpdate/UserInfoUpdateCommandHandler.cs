@@ -27,7 +27,7 @@ namespace Imageverse.Application.Users.Commands.UserInfoUpdate
             {
                 return Errors.Common.BadRequest("Invalid Id format.");
             }
-            if (await _unitOfWork.GetRepository<IUserRepository>().FindById(UserId.Create(id)) is not User userToUpdate)
+            if (await _unitOfWork.GetRepository<IUserRepository>().FindByIdAsync(UserId.Create(id)) is not User userToUpdate)
             {
                 return Errors.Common.NotFound(nameof(User));
             }

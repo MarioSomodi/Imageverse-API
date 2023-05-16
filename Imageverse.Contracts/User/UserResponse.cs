@@ -16,5 +16,7 @@ namespace Imageverse.Contracts.User
         List<string> UserLimitIds,
         UserStatisticsResponse UserStatistics,
         DateTime PackageValidFrom,
-        string PreviousPackageId);
+        string PreviousPackageId,
+        string RefreshToken,
+        DateTime RefreshTokenExpiry);
 }

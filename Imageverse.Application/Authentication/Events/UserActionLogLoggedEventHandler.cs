@@ -17,7 +17,7 @@ namespace Imageverse.Application.Authentication.Events
 
         public async Task Handle(UserActionLogLogged notification, CancellationToken cancellationToken)
         {
-            User? user = await _unitOfWork.GetRepository<IUserRepository>().FindById(notification.userId);
+            User? user = await _unitOfWork.GetRepository<IUserRepository>().FindByIdAsync(notification.userId);
             user!.AddUserActionLogId(user, notification.userActionLogId);
             _unitOfWork.GetRepository<IUserRepository>().Update(user);
             await _unitOfWork.CommitAsync();

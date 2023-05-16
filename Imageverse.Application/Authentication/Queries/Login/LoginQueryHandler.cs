@@ -3,6 +3,7 @@ using Imageverse.Application.Authentication.Common;
 using Imageverse.Application.Common.Interfaces;
 using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Persistance;
+using Imageverse.Domain.Common;
 using Imageverse.Domain.Common.AppErrors;
 using Imageverse.Domain.UserAggregate;
 using Imageverse.Domain.UserAggregate.Events;
@@ -33,6 +34,15 @@ namespace Imageverse.Application.Authentication.Queries.Login
                 return Errors.Authentication.InvalidCredentials;
             }
 
+            if(DateOnly.FromDateTime(user.RefreshTokenExpiry) < DateOnly.FromDateTime(DateTime.UtcNow))
+            {
+                RefreshTokenResult refreshTokenResult = _jwtTokenGenerator.GenerateRefreshToken();
+                user.UpdateRefreshToken(user, refreshTokenResult.RefreshToken);
+                user.UpdateRefreshTokenExpiry(user, refreshTokenResult.RefreshTokenExpiry);
+                _unitOfWork.GetRepository<IUserRepository>().Update(user);
+                await _unitOfWork.CommitAsync();
+            }
+            
             var token = _jwtTokenGenerator.GenerateToken(user);
 
             await _mediator.Publish(new UserLoggedIn(user));

@@ -20,6 +20,8 @@ namespace Imageverse.Domain.UserAggregate
         public string Email { get; private set; } 
         public string ProfileImage { get; private set; } 
         public string Password { get; private set; } 
+        public string RefreshToken { get; private set; }
+        public DateTime RefreshTokenExpiry { get; private set; }
         public PackageId PackageId { get; private set; }
         public PackageId PreviousPackageId { get; private set; }
         public DateTime PackageValidFrom { get; private set; }
@@ -45,7 +47,9 @@ namespace Imageverse.Domain.UserAggregate
             byte[] salt,
             PackageId previousPackageId,
             DateTime packageValidFrom,
-            bool isAdmin)
+            bool isAdmin,
+            string refreshToken,
+            DateTime refreshTokenExpiry)
             : base(userId)
         {
             Username = username;
@@ -60,6 +64,8 @@ namespace Imageverse.Domain.UserAggregate
             PreviousPackageId = previousPackageId;
             PackageValidFrom = packageValidFrom;
             IsAdmin = isAdmin;
+            RefreshToken = refreshToken;
+            RefreshTokenExpiry = refreshTokenExpiry;
         }
 
         public static User Create(
@@ -71,7 +77,9 @@ namespace Imageverse.Domain.UserAggregate
             string password,
             PackageId packageId,
             UserStatistics userStatstics,
-            byte[] salt)
+            byte[] salt,
+            string refreshToken,
+            DateTime refreshTokenExpiry)
         {
             User user = new(
                 UserId.CreateUnique(),
@@ -86,7 +94,9 @@ namespace Imageverse.Domain.UserAggregate
                 salt,
                 packageId,
                 DateTime.UtcNow,
-                false);
+                false,
+                refreshToken,
+                refreshTokenExpiry);
 
             return user;
         }
@@ -182,6 +192,16 @@ namespace Imageverse.Domain.UserAggregate
         public User UpdateIsAdmin(User userToUpdate, bool isAdmin)
         {
             userToUpdate.IsAdmin = isAdmin;
+            return userToUpdate;
+        }
+        public User UpdateRefreshToken(User userToUpdate, string refreshToken)
+        {
+            userToUpdate.RefreshToken = refreshToken;
+            return userToUpdate;
+        }
+        public User UpdateRefreshTokenExpiry(User userToUpdate, DateTime refreshTokenExpiry)
+        {
+            userToUpdate.RefreshTokenExpiry = refreshTokenExpiry;
             return userToUpdate;
         }
 

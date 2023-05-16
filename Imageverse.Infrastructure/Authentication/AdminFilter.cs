@@ -22,7 +22,7 @@ namespace Imageverse.Infrastructure.Authentication
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             string userId = _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-            User? user = await _unitOfWork.GetRepository<IUserRepository>().FindById(UserId.Create(new Guid(userId)));
+            User? user = await _unitOfWork.GetRepository<IUserRepository>().FindByIdAsync(UserId.Create(new Guid(userId)));
             if (!user!.IsAdmin)
             {
                 context.Result = new ForbidResult();

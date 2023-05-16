@@ -23,7 +23,7 @@ namespace Imageverse.Application.Packages.Queries.GetById
             {
                 return Errors.Common.BadRequest("Invalid Id format.");
             }
-            if (await _unitOfWork.GetRepository<IPackageRepository>().FindById(PackageId.Create(id)) is not Package package)
+            if (await _unitOfWork.GetRepository<IPackageRepository>().FindByIdAsync(PackageId.Create(id)) is not Package package)
             {
                 return Errors.Common.NotFound(nameof(Package));
             }

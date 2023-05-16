@@ -28,8 +28,8 @@ namespace Imageverse.Application.Users.Events
         {
             DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow);
 
-            Package? oldPackage = await _unitOfWork.GetRepository<IPackageRepository>().FindById(notification.oldPackage);
-            User? user = await _unitOfWork.GetRepository<IUserRepository>().FindById(notification.UserId);
+            Package? oldPackage = await _unitOfWork.GetRepository<IPackageRepository>().FindByIdAsync(notification.oldPackage);
+            User? user = await _unitOfWork.GetRepository<IUserRepository>().FindByIdAsync(notification.UserId);
             await _databaseLogger.LogUserAction(UserActions.UserChangedPackage, $"User changed their package from {oldPackage!.Name} to {notification.PackageChangedTo.Name}", user!.Id);
             if (_unitOfWork.GetRepository<IUserLimitRepository>().GetUserLimitIfExistsForDate(currentDate, user!.UserLimitIds.ToList()) is UserLimit userLimitOnDate)
             {

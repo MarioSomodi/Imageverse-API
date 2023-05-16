@@ -6,7 +6,7 @@ namespace Imageverse.Application.Common.Interfaces.Persistance
         where T : class
         where TId : class
     {
-        Task<T?> FindById(TId id);
+        Task<T?> FindByIdAsync(TId id);
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);

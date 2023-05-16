@@ -15,12 +15,20 @@ namespace Imageverse.Domain.Common.AppErrors
                     errorMessage = $"{errorMessage} {customMessage}"; 
                 return Error.Custom(400, "Common.BadRequest", errorMessage);
             }
+
             public static Error MethodNotAllowed(string? customMessage = null)
             {
                 var errorMessage = "Method not allowed.";
                 if (customMessage != null)
                     errorMessage = $"{errorMessage} {customMessage}";
                 return Error.Custom(405, "Common.MethodNotAllowed", errorMessage);
+            }
+            public static Error Unauthorized(string? customMessage = null)
+            {
+                var errorMessage = "Unauthorized.";
+                if (customMessage != null)
+                    errorMessage = $"{errorMessage} {customMessage}";
+                return Error.Custom(401, "Common.Unauthorized", errorMessage);
             }
         }
     }

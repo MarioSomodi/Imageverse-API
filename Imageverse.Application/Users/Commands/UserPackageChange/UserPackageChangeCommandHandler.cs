@@ -31,12 +31,12 @@ namespace Imageverse.Application.Users.Commands.UserPackageChange
             {
                 return Errors.Common.BadRequest("Invalid Id format.");
             }
-            if (await _unitOfWork.GetRepository<IUserRepository>().FindById(UserId.Create(id)) is not User userToUpdate)
+            if (await _unitOfWork.GetRepository<IUserRepository>().FindByIdAsync(UserId.Create(id)) is not User userToUpdate)
             {
                 return Errors.Common.NotFound(nameof(User));
             }
             PackageId currentPackageId = userToUpdate.PackageId;
-            if (await _unitOfWork.GetRepository<IPackageRepository>().FindById(PackageId.Create(packageId)) is not Package packageToChangeTo)
+            if (await _unitOfWork.GetRepository<IPackageRepository>().FindByIdAsync(PackageId.Create(packageId)) is not Package packageToChangeTo)
             {
                 return Errors.Common.NotFound(nameof(Package));
             }

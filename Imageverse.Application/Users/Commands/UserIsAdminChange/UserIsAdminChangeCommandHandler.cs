@@ -21,7 +21,7 @@ namespace Imageverse.Application.Users.Commands.UserIsAdminChange
             {
                 return Errors.Common.BadRequest("Invalid Id format.");
             }
-            if (await _unitOfWork.GetRepository<IUserRepository>().FindById(UserId.Create(id)) is not User userToMakeAdmin)
+            if (await _unitOfWork.GetRepository<IUserRepository>().FindByIdAsync(UserId.Create(id)) is not User userToMakeAdmin)
             {
                 return Errors.Common.NotFound(nameof(User));
             }

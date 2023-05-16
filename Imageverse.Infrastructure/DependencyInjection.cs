@@ -1,11 +1,9 @@
 ﻿using Imageverse.Application.Common.Interfaces;
 using Imageverse.Application.Common.Interfaces.Authentication;
-using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Infrastructure.Authentication;
 using Imageverse.Infrastructure.Persistance;
 using Imageverse.Infrastructure.Persistance.Interceptors;
-using Imageverse.Infrastructure.Persistance.Repositories;
 using Imageverse.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -71,7 +69,9 @@ namespace Imageverse.Infrastructure
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = jwtSettings.Issuer,
                         ValidAudience = jwtSettings.Audience,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
+                        // Set to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
+                        ClockSkew = TimeSpan.Zero
                     });
 
             return services;
