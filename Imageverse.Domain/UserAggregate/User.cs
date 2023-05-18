@@ -27,7 +27,6 @@ namespace Imageverse.Domain.UserAggregate
         public DateTime PackageValidFrom { get; private set; }
         public UserStatistics UserStatistics { get; private set; }
         public byte[] Salt { get; private set; }
-
         public bool IsAdmin { get; private set; }
 
         public IReadOnlyList<PostId> PostIds => _postIds.AsReadOnly();

@@ -7,6 +7,7 @@ using Imageverse.Domain.UserAggregate.ValueObjects;
 using MediatR;
 using Imageverse.Domain.UserAggregate;
 using Imageverse.Application.Common.Interfaces.Services;
+using Imageverse.Domain.Common.Enums;
 
 namespace Imageverse.Application.Users.Commands.UserProfileImageChange
 {
@@ -14,11 +15,13 @@ namespace Imageverse.Application.Users.Commands.UserProfileImageChange
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAWSHelper _aWSHelper;
+        private readonly IDatabaseLogger _databaseLogger;
 
-        public UserProfileImageChangeHandler(IUnitOfWork unitOfWork, IAWSHelper aWSHelper)
+        public UserProfileImageChangeHandler(IUnitOfWork unitOfWork, IAWSHelper aWSHelper, IDatabaseLogger databaseLogger)
         {
             _unitOfWork = unitOfWork;
             _aWSHelper = aWSHelper;
+            _databaseLogger = databaseLogger;
         }
 
         public async Task<ErrorOr<bool>> Handle(UserProfileImageChangeCommand request, CancellationToken cancellationToken)
@@ -48,6 +51,8 @@ namespace Imageverse.Application.Users.Commands.UserProfileImageChange
 
             userToUpdate.UpdateProfileImage(userToUpdate, imageUrl);
             _unitOfWork.GetRepository<IUserRepository>().Update(userToUpdate);
+
+            await _databaseLogger.LogUserAction(UserActions.UserChangedProfileImage, "User has successfully updated their profile image.", userToUpdate.Id);
             
             return await _unitOfWork.CommitAsync();
         }

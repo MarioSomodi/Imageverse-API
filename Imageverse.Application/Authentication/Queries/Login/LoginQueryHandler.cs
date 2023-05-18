@@ -45,10 +45,12 @@ namespace Imageverse.Application.Authentication.Queries.Login
                 _unitOfWork.GetRepository<IUserRepository>().Update(user);
                 await _unitOfWork.CommitAsync();
             }
+            
 
             string profileImageUrl = _aWSHelper.RegeneratePresignedUrlForResourceIfUrlExpired(user.ProfileImage, $"profileImages/{user.Id}", out bool expired);
 
-            if (expired)
+            //ProfileImageUrl will be an empty string when the profile image is not a url to an s3 resource so no url regeneration is needed
+            if (expired && profileImageUrl != string.Empty)
             {
                 user.UpdateProfileImage(user, profileImageUrl);
                 _unitOfWork.GetRepository<IUserRepository>().Update(user);

@@ -9,6 +9,7 @@
         UserChangedPassword,
         UserInfoChanged,
         UserChangedPackage,
-        NewUserLimitAdded
+        NewUserLimitAdded,
+        UserChangedProfileImage
     }
 }
