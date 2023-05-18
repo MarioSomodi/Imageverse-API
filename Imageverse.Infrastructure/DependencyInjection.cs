@@ -1,4 +1,5 @@
-﻿using Imageverse.Application.Common.Interfaces;
+﻿using Amazon.S3;
+using Imageverse.Application.Common.Interfaces;
 using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Infrastructure.Authentication;
@@ -22,6 +23,7 @@ namespace Imageverse.Infrastructure
             services
                 .AddAuth(configuration)
                 .AddPersistance(configuration)
+                .AddAWS(configuration)
                 .AddCustomServices();
 
 
@@ -47,6 +49,15 @@ namespace Imageverse.Infrastructure
                 .AddSingleton<IDateTimeProvider, DateTimeProvider>()
                 .AddScoped<IDatabaseLogger, DatabaseLogger>();
 
+            return services;
+        }
+
+        public static IServiceCollection AddAWS(this IServiceCollection services, ConfigurationManager configuration)
+        {
+            services.AddDefaultAWSOptions(configuration.GetAWSOptions());
+            services.AddAWSService<IAmazonS3>();
+            services.AddScoped<IAWSHelper, AWSHelper>();
+            
             return services;
         }
 

@@ -5,7 +5,6 @@
         string Name,
         string Surname,
         string Email,
-        string ProfileImage,
         string Password,
         string PackageId);
 }

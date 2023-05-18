@@ -47,7 +47,6 @@ namespace Imageverse.Application.Authentication.Commands.Register
                 command.Name,
                 command.Surname,
                 command.Email,
-                command.ProfileImage,
                 hashedPassword,
                 PackageId.Create(new Guid(command.PackageId)),
                 userStatistics,

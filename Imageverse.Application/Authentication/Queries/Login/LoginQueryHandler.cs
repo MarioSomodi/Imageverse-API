@@ -3,6 +3,7 @@ using Imageverse.Application.Authentication.Common;
 using Imageverse.Application.Common.Interfaces;
 using Imageverse.Application.Common.Interfaces.Authentication;
 using Imageverse.Application.Common.Interfaces.Persistance;
+using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Domain.Common;
 using Imageverse.Domain.Common.AppErrors;
 using Imageverse.Domain.UserAggregate;
@@ -17,13 +18,15 @@ namespace Imageverse.Application.Authentication.Queries.Login
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IPublisher _mediator;
+        private readonly IAWSHelper _aWSHelper;
 
-        public LoginQueryHandler(IJwtTokenGenerator jwtTokenGenerator, IPasswordHasher passwordHasher, IPublisher mediator, IUnitOfWork unitOfWork)
+        public LoginQueryHandler(IJwtTokenGenerator jwtTokenGenerator, IPasswordHasher passwordHasher, IPublisher mediator, IUnitOfWork unitOfWork, IAWSHelper aWSHelper)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
             _passwordHasher = passwordHasher;
             _mediator = mediator;
             _unitOfWork = unitOfWork;
+            _aWSHelper = aWSHelper;
         }
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
@@ -39,6 +42,15 @@ namespace Imageverse.Application.Authentication.Queries.Login
                 RefreshTokenResult refreshTokenResult = _jwtTokenGenerator.GenerateRefreshToken();
                 user.UpdateRefreshToken(user, refreshTokenResult.RefreshToken);
                 user.UpdateRefreshTokenExpiry(user, refreshTokenResult.RefreshTokenExpiry);
+                _unitOfWork.GetRepository<IUserRepository>().Update(user);
+                await _unitOfWork.CommitAsync();
+            }
+
+            string profileImageUrl = _aWSHelper.RegeneratePresignedUrlForResourceIfUrlExpired(user.ProfileImage, $"profileImages/{user.Id}", out bool expired);
+
+            if (expired)
+            {
+                user.UpdateProfileImage(user, profileImageUrl);
                 _unitOfWork.GetRepository<IUserRepository>().Update(user);
                 await _unitOfWork.CommitAsync();
             }

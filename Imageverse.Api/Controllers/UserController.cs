@@ -4,6 +4,7 @@ using Imageverse.Application.Users.Commands.UserInfoUpdate;
 using Imageverse.Application.Users.Commands.UserIsAdminChange;
 using Imageverse.Application.Users.Commands.UserPackageChange;
 using Imageverse.Application.Users.Commands.UserPasswordUpdate;
+using Imageverse.Application.Users.Commands.UserProfileImageChange;
 using Imageverse.Contracts.Common;
 using Imageverse.Contracts.User;
 using Imageverse.Domain.UserAggregate;
@@ -68,6 +69,19 @@ namespace Imageverse.Api.Controllers
             UserPackageChangeCommand userPackageChangeCommand = _mapper.Map<UserPackageChangeCommand>(changeRequest);
 
             ErrorOr<bool> result = await _mediator.Send(userPackageChangeCommand);
+
+            return result.Match(
+                result => Ok(new BoolResponse(result)),
+                errors => Problem(errors));
+        }
+
+
+        [HttpPut("Image/{id}")]
+        public async Task<IActionResult> ChangeProfileImage(IFormFile image, string id)
+        {
+            UserProfileImageChangeCommand userProfileImageChangeCommand = new UserProfileImageChangeCommand(image, id);
+
+            ErrorOr<bool> result = await _mediator.Send(userProfileImageChangeCommand);
 
             return result.Match(
                 result => Ok(new BoolResponse(result)),

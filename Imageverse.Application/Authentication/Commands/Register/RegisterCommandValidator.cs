@@ -16,9 +16,6 @@ namespace Imageverse.Application.Authentication.Commands.Register
             RuleFor(rC => rC.Email)
                 .NotEmpty()
                 .EmailAddress();
-            RuleFor(rC => rC.ProfileImage)
-                .NotEmpty()
-                .WithName("Profile image");
             RuleFor(rC => rC.PackageId)
                 .NotEmpty()
                 .WithName("Package");
