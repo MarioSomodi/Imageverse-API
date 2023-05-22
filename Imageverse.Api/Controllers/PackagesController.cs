@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using Imageverse.Application.Packages.Commands.CreatePackage;
 using Imageverse.Application.Packages.Queries.GetAllPackages;
-using Imageverse.Application.Packages.Queries.GetById;
+using Imageverse.Application.Packages.Queries.GetPackageById;
 using Imageverse.Contracts.Packages;
 using Imageverse.Domain.PackageAggregate;
 using Imageverse.Infrastructure.Authentication;
@@ -52,7 +52,7 @@ namespace Imageverse.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            ErrorOr<IEnumerable<Package>> result = await _mediator.Send(new GetAllPackagesCommand());
+            ErrorOr<IEnumerable<Package>> result = await _mediator.Send(new GetAllPackagesQuery());
 
             return result.Match(
                 result => Ok(result.AsQueryable().ProjectToType<PackageResponse>()),

@@ -5,10 +5,14 @@ using Imageverse.Application.Users.Commands.UserIsAdminChange;
 using Imageverse.Application.Users.Commands.UserPackageChange;
 using Imageverse.Application.Users.Commands.UserPasswordUpdate;
 using Imageverse.Application.Users.Commands.UserProfileImageChange;
+using Imageverse.Application.Users.Queries.GetAllUsers;
+using Imageverse.Application.Users.Queries.GetUserById;
 using Imageverse.Contracts.Common;
 using Imageverse.Contracts.User;
 using Imageverse.Domain.UserAggregate;
 using Imageverse.Infrastructure.Authentication;
+using Imageverse.Infrastructure.Persistance.Repositories;
+using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -100,5 +104,31 @@ namespace Imageverse.Api.Controllers
                 result => Ok(new BoolResponse(result)),
                 errors => Problem(errors));
         }
+
+        [Admin]
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            GetAllUsersQuery getAllUsersQuery = new GetAllUsersQuery();
+
+            ErrorOr<IEnumerable<User>> result = await _mediator.Send(getAllUsersQuery);
+
+            return result.Match(
+                result => Ok(result.AsQueryable().ProjectToType<UserResponse>()),
+                errors => Problem(errors));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            GetUserByIdQuery getUserByIdQuery = new GetUserByIdQuery(id);
+
+            ErrorOr<User> result = await _mediator.Send(getUserByIdQuery);
+
+            return result.Match(
+                result => Ok(_mapper.Map<UserResponse>(result)),
+                errors => Problem(errors));
+        }
     }
 }
+ 

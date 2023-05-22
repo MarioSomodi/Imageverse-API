@@ -6,7 +6,7 @@ using Imageverse.Domain.PackageAggregate;
 using Imageverse.Domain.PackageAggregate.ValueObjects;
 using MediatR;
 
-namespace Imageverse.Application.Packages.Queries.GetById
+namespace Imageverse.Application.Packages.Queries.GetPackageById
 {
     public class GetPackageByIdQueryHandler : IRequestHandler<GetPackageByIdQuery, ErrorOr<Package>>
     {
@@ -19,7 +19,7 @@ namespace Imageverse.Application.Packages.Queries.GetById
 
         public async Task<ErrorOr<Package>> Handle(GetPackageByIdQuery request, CancellationToken cancellationToken)
         {
-            if(!Guid.TryParse(request.Id, out var id)) 
+            if (!Guid.TryParse(request.Id, out var id))
             {
                 return Errors.Common.BadRequest("Invalid Id format.");
             }

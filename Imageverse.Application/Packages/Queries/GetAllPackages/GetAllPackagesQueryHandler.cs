@@ -6,16 +6,16 @@ using MediatR;
 
 namespace Imageverse.Application.Packages.Queries.GetAllPackages
 {
-    public class GetAllPackagesCommandHandler : IRequestHandler<GetAllPackagesCommand, ErrorOr<IEnumerable<Package>>>
+    public class GetAllPackagesQueryHandler : IRequestHandler<GetAllPackagesQuery, ErrorOr<IEnumerable<Package>>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public GetAllPackagesCommandHandler(IUnitOfWork unitOfWork)
+        public GetAllPackagesQueryHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ErrorOr<IEnumerable<Package>>> Handle(GetAllPackagesCommand request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<IEnumerable<Package>>> Handle(GetAllPackagesQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<Package> packages = await _unitOfWork.GetRepository<IPackageRepository>().Get(orderBy: p => p.OrderBy(x => x.Price));
             return packages.ToList();

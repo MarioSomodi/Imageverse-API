@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Imageverse.Application.Packages.Queries.GetById
+namespace Imageverse.Application.Packages.Queries.GetPackageById
 {
     public class GetPackageByIdQueryValidator : AbstractValidator<GetPackageByIdQuery>
     {

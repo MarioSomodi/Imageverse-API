@@ -4,7 +4,6 @@ using Imageverse.Application.Common.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Globalization;
-using System.Security.Cryptography;
 
 namespace Imageverse.Infrastructure.Services
 {

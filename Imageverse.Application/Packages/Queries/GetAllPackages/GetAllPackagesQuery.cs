@@ -4,5 +4,5 @@ using MediatR;
 
 namespace Imageverse.Application.Packages.Queries.GetAllPackages
 {
-    public record GetAllPackagesCommand() : IRequest<ErrorOr<IEnumerable<Package>>>;
+    public record GetAllPackagesQuery() : IRequest<ErrorOr<IEnumerable<Package>>>;
 }
