@@ -6,6 +6,7 @@ using Imageverse.Application.Authentication.Queries.Login;
 using Imageverse.Application.Authentication.Queries.Refresh;
 using Imageverse.Contracts.Authentication;
 using Imageverse.Contracts.Common;
+using Imageverse.Infrastructure.Authentication;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -62,6 +63,8 @@ namespace Imageverse.Api.Controllers
                 errors => Problem(errors));
         }
 
+        [Authorize]
+        [Admin]
         [HttpPost("{id}")]
         public async Task<IActionResult> RevokeRefreshToken(string id)
         {
