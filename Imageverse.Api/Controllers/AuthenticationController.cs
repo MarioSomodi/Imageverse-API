@@ -4,6 +4,7 @@ using Imageverse.Application.Authentication.Commands.RevokeRefreshToken;
 using Imageverse.Application.Authentication.Common;
 using Imageverse.Application.Authentication.Queries.Login;
 using Imageverse.Application.Authentication.Queries.Refresh;
+using Imageverse.Application.Authentication.Queries.UserExists;
 using Imageverse.Contracts.Authentication;
 using Imageverse.Contracts.Common;
 using Imageverse.Infrastructure.Authentication;
@@ -60,6 +61,18 @@ namespace Imageverse.Api.Controllers
 
             return refreshedAccessToken.Match(
                 refreshedAccessTokenResult => Ok(new RefreshResponse(refreshedAccessTokenResult)),
+                errors => Problem(errors));
+        }
+
+        [HttpGet("{authenticationProviderId}")]
+        public async Task<IActionResult> UserExists(string authenticationProviderId)
+        {
+            UserExistsQuery userExistsQuery = new UserExistsQuery(authenticationProviderId);
+
+            ErrorOr<bool> userExists = await _mediator.Send(userExistsQuery);
+
+            return userExists.Match(
+                userExistsResult => Ok(new BoolResponse(userExistsResult)),
                 errors => Problem(errors));
         }
 

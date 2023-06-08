@@ -6,5 +6,8 @@
         string Surname,
         string Email,
         string Password,
-        string PackageId);
+        string PackageId,
+        string? ProfileImage,
+        string? AuthenticationProviderId,
+        int AuthenticationType);
 }

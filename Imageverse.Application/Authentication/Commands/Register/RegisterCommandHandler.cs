@@ -31,14 +31,20 @@ namespace Imageverse.Application.Authentication.Commands.Register
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
-            if (await _unitOfWork.GetRepository<IUserRepository>().GetSingleOrDefaultAsync(u => u.Email == command.Email) is not null)
+            if (await _unitOfWork.GetRepository<IUserRepository>().GetSingleOrDefaultAsync(u => u.Email == command.Email) is not null 
+                && command.AuthenticationType == ((int)AuthenticationType.Default))
             {
                 return Errors.User.DuplicateEmail;
             }
 
             UserStatistics userStatistics = UserStatistics.Create(0,0,0,1,0);
 
-            var hashedPassword = _passwordHasher.HashPassword(command.Password, out byte[] salt);
+            var hashedPassword = "";
+            byte[] salt = new byte[64];
+            if (command.AuthenticationType == ((int)AuthenticationType.Default))
+            {
+                hashedPassword = _passwordHasher.HashPassword(command.Password, out salt);
+            }
 
             RefreshTokenResult refreshTokenResult = _jwtTokenGenerator.GenerateRefreshToken();
 
@@ -52,7 +58,10 @@ namespace Imageverse.Application.Authentication.Commands.Register
                 userStatistics,
                 salt,
                 refreshTokenResult.RefreshToken,
-                refreshTokenResult.RefreshTokenExpiry);
+                command.ProfileImage,
+                refreshTokenResult.RefreshTokenExpiry,
+                command.AuthenticationProviderId,
+                command.AuthenticationType);
 
             await _unitOfWork.GetRepository<IUserRepository>().AddAsync(user);
             await _unitOfWork.CommitAsync();
@@ -60,7 +69,7 @@ namespace Imageverse.Application.Authentication.Commands.Register
             var token = _jwtTokenGenerator.GenerateToken(user);
             
             await _databaseLogger.LogUserAction(UserActions.UserRegistered,
-               $"User {user.Name} {user.Surname} with the username {user.Username} and email {user.Email} has registered succesfully.",
+               $"User {user.Name} {user.Surname} with the username {user.Username} and email {user.Email} has registered succesfully via {Enum.GetName<AuthenticationType>((AuthenticationType)command.AuthenticationType)} authentication.",
                user.Id);
 
             return new AuthenticationResult(

@@ -19,7 +19,9 @@ namespace Imageverse.Domain.UserAggregate
         public string Surname { get; private set; } 
         public string Email { get; private set; } 
         public string ProfileImage { get; private set; } 
-        public string Password { get; private set; } 
+        public string Password { get; private set; }
+        public int AuthenticationType { get; private set; }
+        public string? AuthenticationProviderId { get; private set; }
         public string RefreshToken { get; private set; }
         public DateTime RefreshTokenExpiry { get; private set; }
         public PackageId PackageId { get; private set; }
@@ -48,7 +50,9 @@ namespace Imageverse.Domain.UserAggregate
             DateTime packageValidFrom,
             bool isAdmin,
             string refreshToken,
-            DateTime refreshTokenExpiry)
+            DateTime refreshTokenExpiry,
+            string? authenticationProviderId,
+            int authenticationType)
             : base(userId)
         {
             Username = username;
@@ -65,6 +69,8 @@ namespace Imageverse.Domain.UserAggregate
             IsAdmin = isAdmin;
             RefreshToken = refreshToken;
             RefreshTokenExpiry = refreshTokenExpiry;
+            AuthenticationProviderId = authenticationProviderId;
+            AuthenticationType = authenticationType;
         }
 
         public static User Create(
@@ -77,7 +83,10 @@ namespace Imageverse.Domain.UserAggregate
             UserStatistics userStatstics,
             byte[] salt,
             string refreshToken,
-            DateTime refreshTokenExpiry)
+            string? profileImage,
+            DateTime refreshTokenExpiry,
+            string? authenticationProviderId,
+            int authenticationType)
         {
             User user = new(
                 UserId.CreateUnique(),
@@ -85,7 +94,7 @@ namespace Imageverse.Domain.UserAggregate
                 name,
                 surname,
                 email,
-                $"https://ui-avatars.com/api/?name={name}+{surname}&background=555",
+                profileImage == null ? $"https://ui-avatars.com/api/?name={name}+{surname}&background=555" : profileImage,
                 password,
                 packageId,
                 userStatstics,
@@ -94,7 +103,9 @@ namespace Imageverse.Domain.UserAggregate
                 DateTime.UtcNow,
                 false,
                 refreshToken,
-                refreshTokenExpiry);
+                refreshTokenExpiry,
+                authenticationProviderId,
+                authenticationType);
 
             return user;
         }

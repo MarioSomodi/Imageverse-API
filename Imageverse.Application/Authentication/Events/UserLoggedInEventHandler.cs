@@ -22,7 +22,7 @@ namespace Imageverse.Application.Authentication.Events
         {
             var user = notification.user;
             await _databaseLogger.LogUserAction(UserActions.UserLoggedIn,
-                $"User {user.Name} {user.Surname} with the username {user.Username} and email {user.Email} has logged in succesfully.",
+                $"User {user.Name} {user.Surname} with the username {user.Username} and email {user.Email} has logged in succesfully via via {Enum.GetName<AuthenticationType>((AuthenticationType)user.AuthenticationType)} authentication..",
                 user.Id);
 
             user.UserStatistics.UpdateLastLogin(user.UserStatistics)

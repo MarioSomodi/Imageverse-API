@@ -2,6 +2,7 @@
 using Imageverse.Application.Authentication.Common;
 using Imageverse.Application.Authentication.Queries.Login;
 using Imageverse.Application.Authentication.Queries.Refresh;
+using Imageverse.Application.Authentication.Queries.UserExists;
 using Imageverse.Contracts.Authentication;
 using Mapster;
 

@@ -6,6 +6,7 @@ using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Domain.Common;
 using Imageverse.Domain.Common.AppErrors;
+using Imageverse.Domain.Common.Enums;
 using Imageverse.Domain.UserAggregate;
 using Imageverse.Domain.UserAggregate.Events;
 using MediatR;
@@ -31,8 +32,10 @@ namespace Imageverse.Application.Authentication.Queries.Login
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
-            if (await _unitOfWork.GetRepository<IUserRepository>().GetSingleOrDefaultAsync(u => u.Email == query.Email) is not User user
-                || !_passwordHasher.VerifyPassword(query.Password, user.Password, user.Salt))
+            if (await _unitOfWork.GetRepository<IUserRepository>().GetSingleOrDefaultAsync(u => ((query.AuthenticationType == (int)AuthenticationType.Default) && u.Email == query.Email) || 
+                                                                                                ((query.AuthenticationType != (int)AuthenticationType.Default) && u.AuthenticationProviderId == query.AuthenticationProviderId)) 
+                                                                                                is not User user
+                || !_passwordHasher.VerifyPassword(query.Password, user.Password, user.Salt) && (query.AuthenticationType == (int)AuthenticationType.Default))
             {
                 return Errors.Authentication.InvalidCredentials;
             }

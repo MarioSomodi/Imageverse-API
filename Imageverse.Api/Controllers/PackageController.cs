@@ -8,17 +8,18 @@ using Imageverse.Infrastructure.Authentication;
 using Mapster;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Imageverse.Api.Controllers
 {
-    public class PackagesController : ApiController
+    public class PackageController : ApiController
     {
 
         private readonly ISender _mediator;
         private readonly IMapper _mapper;
 
-        public PackagesController(ISender mediator, IMapper mapper)
+        public PackageController(ISender mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;
@@ -49,6 +50,7 @@ namespace Imageverse.Api.Controllers
                 errors => Problem(errors));
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
