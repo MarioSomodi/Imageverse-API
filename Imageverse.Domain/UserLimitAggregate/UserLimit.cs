@@ -9,14 +9,14 @@ namespace Imageverse.Domain.UserLimitAggregate
         /// <summary>
         /// Specifies total MB of images uploaded on specific date
         /// </summary>
-        public int AmountOfMBUploaded { get; private set; }
+        public double AmountOfMBUploaded { get; private set; }
         public int AmountOfImagesUploaded { get; private set; }
         public bool RequestedChangeOfPackage { get; private set; }
 
         private UserLimit(
             UserLimitId userLimitId,
             DateTime date,
-            int amountUploaded,
+            double amountUploaded,
             int amountOfImagesUploaded,
             bool requestedChangeOfPackage)
             : base(userLimitId)
@@ -28,7 +28,7 @@ namespace Imageverse.Domain.UserLimitAggregate
         }
 
         public static UserLimit Create(
-            int amountUploaded,
+            double amountUploaded,
             int amountOfImagesUploaded,
             bool requestedChangeOfPackage)
         {
@@ -51,7 +51,7 @@ namespace Imageverse.Domain.UserLimitAggregate
             return userLimitToUpdate;
         }
 
-        public UserLimit UpdateAmountOfMBUploaded(UserLimit userLimitToUpdate, int value)
+        public UserLimit UpdateAmountOfMBUploaded(UserLimit userLimitToUpdate, double value)
         {
             userLimitToUpdate.AmountOfMBUploaded = value;
             return userLimitToUpdate;

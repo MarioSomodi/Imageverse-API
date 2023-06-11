@@ -10,7 +10,7 @@ namespace Imageverse.Domain.PostAggregate.Entites
         /// <summary>
         /// Specifies image size in MB
         /// </summary>
-        public int Size { get; private set; }
+        public double Size { get; private set; }
         public string Resolution { get; private set; }
         public string Format { get; private set; }
 
@@ -18,7 +18,7 @@ namespace Imageverse.Domain.PostAggregate.Entites
             ImageId imageId,
             string name,
             string url,
-            int size,
+            double size,
             string resolution,
             string format) : base(imageId)
         {
@@ -32,7 +32,7 @@ namespace Imageverse.Domain.PostAggregate.Entites
         public static Image Create(
             string name,
             string url,
-            int size,
+            double size,
             string resolution,
             string format)
         {

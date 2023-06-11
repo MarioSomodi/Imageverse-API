@@ -10,6 +10,7 @@
         UserInfoChanged,
         UserChangedPackage,
         NewUserLimitAdded,
-        UserChangedProfileImage
+        UserChangedProfileImage,
+        UserCreatedAPost
     }
 }

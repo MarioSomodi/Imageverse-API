@@ -22,6 +22,21 @@ namespace Imageverse.Infrastructure.Services
             _presignedUrlExpiryDays = _configuration.GetValue<double?>("S3PresignedUrlExpiryDays") ?? 2;
         }
 
+        public async Task UploadByteArrayAsync(byte[] bytes, string key)
+        {
+            Stream stream = new MemoryStream(bytes)
+            {
+                Position = 0
+            };
+            PutObjectRequest request = new()
+            {
+                BucketName = _s3BucketName,
+                Key = key,
+                InputStream = stream
+            };
+            await _s3Client.PutObjectAsync(request);
+        }
+
         public async Task UploadFileAsync(IFormFile file, string key)
         {
             PutObjectRequest request = new()

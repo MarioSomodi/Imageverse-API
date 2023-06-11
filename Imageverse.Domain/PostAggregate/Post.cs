@@ -2,6 +2,7 @@
 using Imageverse.Domain.Models;
 using Imageverse.Domain.PostAggregate.Entites;
 using Imageverse.Domain.PostAggregate.ValueObjects;
+using Imageverse.Domain.UserActionLogAggregate.ValueObjects;
 using Imageverse.Domain.UserAggregate.ValueObjects;
 
 namespace Imageverse.Domain.PostAggregate
@@ -48,6 +49,18 @@ namespace Imageverse.Domain.PostAggregate
                 DateTime.UtcNow,
                 DateTime.UtcNow,
                 images);
+        }
+
+        public Post AddHashtagIds(Post postToUpdate, List<HashtagId> hashtagIds)
+        {
+            postToUpdate._hashtagIds.AddRange(hashtagIds);
+            return postToUpdate;
+        }
+
+        public Post AddImageToPost(Post postToUpdate, Image image)
+        {
+            postToUpdate._images.Add(image);
+            return postToUpdate;
         }
 
 #pragma warning disable CS8618
