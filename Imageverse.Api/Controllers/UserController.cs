@@ -11,7 +11,6 @@ using Imageverse.Contracts.Common;
 using Imageverse.Contracts.User;
 using Imageverse.Domain.UserAggregate;
 using Imageverse.Infrastructure.Authentication;
-using Imageverse.Infrastructure.Persistance.Repositories;
 using Mapster;
 using MapsterMapper;
 using MediatR;
