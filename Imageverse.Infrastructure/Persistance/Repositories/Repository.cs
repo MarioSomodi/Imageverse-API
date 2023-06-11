@@ -66,6 +66,11 @@ namespace Imageverse.Infrastructure.Persistance.Repositories
             await _entityDbSet.AddAsync(entity);
         }
 
+        public async Task AddRangeAsync(List<T> entity)
+        {
+            await _entityDbSet.AddRangeAsync(entity);
+        }
+
         public void Delete(T entity)
         {
             _entityDbSet.Remove(entity);

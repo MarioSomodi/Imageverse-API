@@ -8,6 +8,7 @@ namespace Imageverse.Application.Common.Interfaces.Persistance
     {
         Task<T?> FindByIdAsync(TId id);
         Task AddAsync(T entity);
+        Task AddRangeAsync(List<T> entity);
         void Update(T entity);
         void Delete(T entity);
         Task<T?> GetSingleOrDefaultAsync(Expression<Func<T, bool>> predicate);
