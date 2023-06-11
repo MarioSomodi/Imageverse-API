@@ -39,6 +39,8 @@ namespace Imageverse.Application.Users.Events
             }
             UserLimit userLimit = UserLimit.Create(0, 0, true);
             await _unitOfWork.GetRepository<IUserLimitRepository>().AddAsync(userLimit);
+            user.UserStatistics.UpdateTotalTimesUserRequestedPackageChange(user.UserStatistics, user.UserStatistics.TotalTimesUserRequestedPackageChange + 1);
+            _unitOfWork.GetRepository<IUserRepository>().Update(user);
             bool success = await _unitOfWork.CommitAsync();
             if (success)
             {

@@ -31,7 +31,7 @@ namespace Imageverse.Application.Users.Commands.UserEmailUpdate
             {
                 return Errors.Common.NotFound(nameof(User));
             }
-            if (await _unitOfWork.GetRepository<IUserRepository>().GetSingleOrDefaultAsync(u => u.Email == request.Email) is User userWithSameEmail)
+            if (await _unitOfWork.GetRepository<IUserRepository>().GetSingleOrDefaultAsync(u => u.Email == request.Email && u.AuthenticationType == request.authenticationType) is User userWithSameEmail)
             {
                 return Errors.User.DuplicateEmail;
             }

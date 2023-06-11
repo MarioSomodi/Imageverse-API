@@ -40,16 +40,19 @@ namespace Imageverse.Application.Users.Commands.UserPackageChange
             {
                 return Errors.Common.NotFound(nameof(Package));
             }
-            if (userToUpdate.PackageId.Equals(packageToChangeTo.Id))
-            {
-                return Errors.User.PackageConflict;
-            }
             if (userToUpdate.UserLimitIds.Count > 0)
             {
                 List<UserLimit> userLimits = (List<UserLimit>)await _unitOfWork.GetRepository<IUserLimitRepository>().FindAllById(userToUpdate.UserLimitIds);
                 UserLimit? userLimit = userLimits.Where(uL => DateOnly.FromDateTime(uL.Date) == currentDate).FirstOrDefault();
                 if(userLimit is not null && userLimit.RequestedChangeOfPackage)
+                {
                     packageCanBeChanged = false;
+                    return Errors.Common.MethodNotAllowed("Cannot change package more than once a day.");
+                }
+            }
+            if (userToUpdate.PackageId.Equals(packageToChangeTo.Id))
+            {
+                return Errors.User.PackageConflict;
             }
             if(packageCanBeChanged)
             {
@@ -61,7 +64,7 @@ namespace Imageverse.Application.Users.Commands.UserPackageChange
                 if (success) await _mediator.Publish(new UserChangedPackage(userToUpdate.Id, currentPackageId, packageToChangeTo));
                 return success;
             }
-            return Errors.Common.MethodNotAllowed("Cannot change package more than once a day.");
+            return Errors.Common.BadRequest("Something was malformed");
         }
     }
 }

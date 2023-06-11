@@ -11,6 +11,7 @@ namespace Imageverse.Contracts.User
         string ProfileImage,
         string PackageId,
         string ActivePackageId,
+        int authenticationType,
         bool isAdmin,
         List<string> PostIds,
         List<string> UserActionLogIds,

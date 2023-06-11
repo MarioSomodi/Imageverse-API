@@ -32,7 +32,7 @@ namespace Imageverse.Application.Authentication.Queries.Login
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
-            if (await _unitOfWork.GetRepository<IUserRepository>().GetSingleOrDefaultAsync(u => ((query.AuthenticationType == (int)AuthenticationType.Default) && u.Email == query.Email) || 
+            if (await _unitOfWork.GetRepository<IUserRepository>().GetSingleOrDefaultAsync(u => ((query.AuthenticationType == (int)AuthenticationType.Default) && u.Email == query.Email && u.AuthenticationType == (int)AuthenticationType.Default) || 
                                                                                                 ((query.AuthenticationType != (int)AuthenticationType.Default) && u.AuthenticationProviderId == query.AuthenticationProviderId)) 
                                                                                                 is not User user
                 || !_passwordHasher.VerifyPassword(query.Password, user.Password, user.Salt) && (query.AuthenticationType == (int)AuthenticationType.Default))
@@ -50,7 +50,7 @@ namespace Imageverse.Application.Authentication.Queries.Login
             }
             
 
-            string profileImageUrl = _aWSHelper.RegeneratePresignedUrlForResourceIfUrlExpired(user.ProfileImage, $"profileImages/{user.Id}", out bool expired);
+            string profileImageUrl = _aWSHelper.RegeneratePresignedUrlForResourceIfUrlExpired(user.ProfileImage, $"profileImages/{user.Id.Value}", out bool expired);
 
             //ProfileImageUrl will be an empty string when the profile image is not a url to an s3 resource so no url regeneration is needed
             if (expired && profileImageUrl != string.Empty)

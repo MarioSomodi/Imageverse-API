@@ -8,7 +8,7 @@ namespace Imageverse.Application.Authentication.Commands.Register
     {
         public RegisterCommandValidator()
         {
-            RuleFor(rC => rC.AuthenticationType).NotEmpty();
+            RuleFor(rC => rC.AuthenticationType).NotNull();
             RuleFor(rC => rC.Username)
                 .NotEmpty();
             RuleFor(rC => rC.Name)

@@ -94,7 +94,7 @@ namespace Imageverse.Domain.UserAggregate
                 name,
                 surname,
                 email,
-                profileImage == null ? $"https://ui-avatars.com/api/?name={name}+{surname}&background=555" : profileImage,
+                profileImage == null ? $"https://ui-avatars.com/api/?name={name}+{surname}&background=fff" : profileImage,
                 password,
                 packageId,
                 userStatstics,

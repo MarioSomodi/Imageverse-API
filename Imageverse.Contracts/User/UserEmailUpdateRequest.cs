@@ -2,5 +2,6 @@
 {
     public record UserEmailUpdateRequest(
         string Id,
-        string Email);
+        string Email,
+        int authenticationType);
 }
