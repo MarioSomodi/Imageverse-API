@@ -1,4 +1,5 @@
-﻿using ErrorOr;
+﻿using Azure;
+using ErrorOr;
 using Imageverse.Application.UserLimits.Queries;
 using Imageverse.Contracts.UserLimits;
 using Imageverse.Domain.UserLimitAggregate;
@@ -26,8 +27,15 @@ namespace Imageverse.Api.Controllers
 
             ErrorOr<UserLimit> result = await _mediator.Send(userLimitOnDateQuery);
 
+            UserLimitResponse? response = null;
+
+            if (!result.IsError)
+            {
+                response = new UserLimitResponse(Math.Round(result.Value.AmountOfMBUploaded, 1), result.Value.AmountOfImagesUploaded, result.Value.RequestedChangeOfPackage);
+            }
+
             return result.Match(
-                result => Ok(_mapper.Map<UserLimitResponse>(result)),
+                result => Ok(response),
                 errors => Problem(errors));
         }
     }

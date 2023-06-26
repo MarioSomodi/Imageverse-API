@@ -65,7 +65,15 @@ namespace Imageverse.Infrastructure.Services
             expired = false;
             if (!url.Contains("amazonaws")) return string.Empty;
             string urlCreatedAt = url.Split(new string[] { "X-Amz-Date" }, StringSplitOptions.None)[1].Split('&')[0].Substring(1);
-            string fileExtenstion = url.Split('?')[0].Split('/')[4].Split('.')[1];
+            string fileExtenstion = "";
+            if (url.Contains("profileImages"))
+            {
+                fileExtenstion = url.Split('?')[0].Split('/')[4].Split('.')[1];
+            }
+            else
+            {
+                fileExtenstion = url.Split('?')[0].Split('/')[5].Split('.')[1];
+            }
 
             DateTime expiry = DateTime.ParseExact(urlCreatedAt, "yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture, DateTimeStyles.None).AddDays(_presignedUrlExpiryDays!.Value);
             if(expiry < DateTime.UtcNow)

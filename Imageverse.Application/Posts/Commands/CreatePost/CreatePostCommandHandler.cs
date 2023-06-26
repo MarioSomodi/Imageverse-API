@@ -16,8 +16,9 @@ using Imageverse.Domain.UserAggregate.ValueObjects;
 using Imageverse.Domain.UserLimitAggregate;
 using MediatR;
 using System.Drawing.Imaging;
+using System.Text.RegularExpressions;
 
-namespace Imageverse.Application.Posts.Commands
+namespace Imageverse.Application.Posts.Commands.CreatePost
 {
     public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, ErrorOr<PostResult>>
     {
@@ -32,9 +33,11 @@ namespace Imageverse.Application.Posts.Commands
             _publisher = publisher;
         }
 
-        public async Task<ErrorOr<PostResult>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		public async Task<ErrorOr<PostResult>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
-            if (!await ByteConversions.IsBase64String(request.Base64Image)){
+            if (!Regex.Match(request.Base64Image, "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$").Success)
+            {
                 return Errors.Common.BadRequest("Image needs to be encoded in a base64 string");
             }
             if (!Guid.TryParse(request.UserId, out var id))
@@ -60,17 +63,18 @@ namespace Imageverse.Application.Posts.Commands
             string key = "";
             string imageUrl = "";
 
-            using (Stream stream = new MemoryStream(imageBytes)) { 
+            using (Stream stream = new MemoryStream(imageBytes))
+            {
                 imageSizeInMB = ByteConversions.ConvertBytesToMegabytes(stream.Length);
-                if(imageSizeInMB > Convert.ToDouble(package.UploadSizeLimit))
+                if (imageSizeInMB > Convert.ToDouble(package.UploadSizeLimit))
                 {
                     return Errors.Common.MethodNotAllowed($"Highest image size you can upload is {package.UploadSizeLimit} and you are trying to upload {imageSizeInMB}");
                 }
-                if(userLimitToday is not null && userLimitToday.AmountOfImagesUploaded + 1 > package.DailyImageUploadLimit)
+                if (userLimitToday is not null && userLimitToday.AmountOfImagesUploaded + 1 > package.DailyImageUploadLimit)
                 {
                     return Errors.Common.MethodNotAllowed($"You are not allowed to post anymore today by the restrictions in your package");
                 }
-                if (userLimitToday is not null && (userLimitToday.AmountOfMBUploaded + imageSizeInMB) > package.DailyUploadLimit)
+                if (userLimitToday is not null && userLimitToday.AmountOfMBUploaded + imageSizeInMB > package.DailyUploadLimit)
                 {
                     return Errors.Common.MethodNotAllowed($"You are not allowed to post anymore today by restrictions in your package");
                 }
@@ -79,10 +83,11 @@ namespace Imageverse.Application.Posts.Commands
                 {
                     var imageStream = System.Drawing.Image.FromStream(stream);
                     ImageFormat format = ImageFormat.Jpeg;
-                    if(request.SaveImageAs == "png")
+                    if (request.SaveImageAs == "png")
                     {
                         format = ImageFormat.Png;
-                    }else if(request.SaveImageAs == "bmp")
+                    }
+                    else if (request.SaveImageAs == "bmp")
                     {
                         format = ImageFormat.Bmp;
                     }
@@ -100,8 +105,9 @@ namespace Imageverse.Application.Posts.Commands
 
             List<Hashtag> hashtags = new List<Hashtag>();
 
-            foreach(var hashtag in request.Hashtags) {
-                if(await _unitOfWork.GetRepository<IHashtagRepository>().GetSingleOrDefaultAsync(h => h.Name.Equals(hashtag)) is not Hashtag hashtagThatExists)
+            foreach (var hashtag in request.Hashtags)
+            {
+                if (await _unitOfWork.GetRepository<IHashtagRepository>().GetSingleOrDefaultAsync(h => h.Name.Equals(hashtag)) is not Hashtag hashtagThatExists)
                 {
                     Hashtag hashtagToAdd = Hashtag.Create(hashtag);
                     await _unitOfWork.GetRepository<IHashtagRepository>().AddAsync(hashtagToAdd);
@@ -123,7 +129,7 @@ namespace Imageverse.Application.Posts.Commands
             Post post = Post.Create(
                     request.Description,
                     user.Id,
-                    new List<Image>() { 
+                    new List<Image>() {
                         image
                     }
                 );
@@ -131,13 +137,14 @@ namespace Imageverse.Application.Posts.Commands
             PostResult result = new PostResult(
                 post,
                 $"{user.Name} {user.Surname}",
+                user.ProfileImage,
                 hashtags
             );
 
             await _unitOfWork.GetRepository<IPostRepository>().AddAsync(post);
 
             bool success = await _unitOfWork.CommitAsync();
-            if(success) await _publisher.Publish(new PostCreated(user, hashtags, post, imageSizeInMB));
+            if (success) await _publisher.Publish(new PostCreated(user, hashtags, post, imageSizeInMB));
             return result;
         }
     }

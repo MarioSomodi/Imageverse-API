@@ -1,7 +1,7 @@
 ﻿namespace Imageverse.Contracts.UserLimits
 {
     public record UserLimitResponse(
-        int AmountOfMBUploaded,
+        double AmountOfMBUploaded,
         int AmountOfImagesUploaded,
         bool RequestedChangeOfPackage);
 }

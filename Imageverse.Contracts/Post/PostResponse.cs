@@ -7,6 +7,8 @@ namespace Imageverse.Contracts.Post
         string Id,
         string Description,
         string Author,
+        string UserId,
+        string AuthorPhoto,
         DateTime PostedAtDateTime,
         DateTime UpdatedAtDateTime,
         IEnumerable<ImageResponse> Images,

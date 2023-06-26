@@ -2,7 +2,7 @@
 {
     public record UserStatisticsResponse(
         string Id,
-        int TotalMbUploaded,
+        double TotalMbUploaded,
         int TotalImagesUploaded,
         int TotalTimesUserRequestedPackageChange,
         DateTime FirstLogin,

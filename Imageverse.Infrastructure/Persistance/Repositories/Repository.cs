@@ -1,6 +1,9 @@
-﻿using Imageverse.Application.Common.Interfaces.Persistance;
+﻿using Amazon.S3.Model;
+using Imageverse.Application.Common.Interfaces.Persistance;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Imageverse.Infrastructure.Persistance.Repositories
 {
@@ -30,6 +33,17 @@ namespace Imageverse.Infrastructure.Persistance.Repositories
         public async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
             return await _entityDbSet.FirstOrDefaultAsync(predicate);
+        }
+
+        public IEnumerable<T> SkipAndTakeSpecific(int skip, int take, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
+        {
+            IQueryable<T> query = _entityDbSet;
+            query = query.Skip(skip).Take(take);
+            if (orderBy != null)
+            {
+                return orderBy(query).ToList();
+            }
+            return query;
         }
 
         public async Task<IEnumerable<T>> Get(

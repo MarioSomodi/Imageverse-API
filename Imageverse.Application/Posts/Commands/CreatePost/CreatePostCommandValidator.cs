@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Imageverse.Application.Posts.Commands
+namespace Imageverse.Application.Posts.Commands.CreatePost
 {
     public class CreatePostCommandValidator : AbstractValidator<CreatePostCommand>
     {

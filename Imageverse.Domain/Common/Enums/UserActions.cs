@@ -11,6 +11,7 @@
         UserChangedPackage,
         NewUserLimitAdded,
         UserChangedProfileImage,
-        UserCreatedAPost
+        UserCreatedAPost,
+        UserUpdatedAPost,
     }
 }

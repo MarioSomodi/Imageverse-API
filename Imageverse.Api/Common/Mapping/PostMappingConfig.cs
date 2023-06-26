@@ -1,4 +1,5 @@
-﻿using Imageverse.Application.Posts.Common;
+﻿using Imageverse.Application.Posts.Commands.EditPost;
+using Imageverse.Application.Posts.Common;
 using Imageverse.Contracts.Images;
 using Imageverse.Contracts.Post;
 using Imageverse.Contracts.User;
@@ -11,11 +12,14 @@ namespace Imageverse.Api.Common.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<Image, ImageResponse>()
+            config.NewConfig<EditPostRequest, EditPostCommand>();
+
+			config.NewConfig<Image, ImageResponse>()
                 .Map(dest => dest.Id, src => src.Id.Value);
 
             config.NewConfig<PostResult, PostResponse>()
                .Map(dest => dest.Id, src => src.Post.Id.Value)
+               .Map(dest => dest.UserId, src => src.Post.UserId.Value)
                .Map(dest => dest.Description, src => src.Post.Description)
                .Map(dest => dest.PostedAtDateTime, src => src.Post.PostedAtDateTime)
                .Map(dest => dest.UpdatedAtDateTime, src => src.Post.UpdatedAtDateTime)

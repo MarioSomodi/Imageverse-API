@@ -3,6 +3,7 @@ using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Domain.Common.Enums;
 using Imageverse.Domain.PostAggregate.Events;
+using Imageverse.Domain.UserAggregate.Entities;
 using Imageverse.Domain.UserLimitAggregate;
 using MediatR;
 
@@ -37,7 +38,6 @@ namespace Imageverse.Application.Posts.Events
                     false);
                 await _unitOfWork.GetRepository<IUserLimitRepository>().AddAsync(userLimit);
                 user.AddUserLimitId(user, userLimit.Id);
-                _unitOfWork.GetRepository<IUserRepository>().Update(user);
             }
             else
             {
@@ -46,7 +46,11 @@ namespace Imageverse.Application.Posts.Events
                 _unitOfWork.GetRepository<IUserLimitRepository>().Update(userLimitToday);
             }
 
-            _unitOfWork.GetRepository<IPostRepository>().Update(post);
+            user.UserStatistics.UpdateTotalMBUploaded(user.UserStatistics, user.UserStatistics.TotalMBUploaded + notification.ImageSize);
+			user.UserStatistics.UpdateTotalImagesUploaded(user.UserStatistics, user.UserStatistics.TotalImagesUploaded + 1);
+
+			_unitOfWork.GetRepository<IUserRepository>().Update(user);
+			_unitOfWork.GetRepository<IPostRepository>().Update(post);
             await _unitOfWork.CommitAsync();
 
             await _databaseLogger.LogUserAction(UserActions.UserLoggedIn,

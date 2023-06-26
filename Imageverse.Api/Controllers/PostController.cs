@@ -1,17 +1,21 @@
 ﻿using ErrorOr;
-using Imageverse.Application.Hashtags.Commands;
-using Imageverse.Application.Posts.Commands;
+using Imageverse.Application.Posts.Commands.CreatePost;
+using Imageverse.Application.Posts.Commands.DeletePost;
+using Imageverse.Application.Posts.Commands.EditPost;
 using Imageverse.Application.Posts.Common;
-using Imageverse.Contracts.Hashtag;
+using Imageverse.Application.Posts.Queries.GetById;
+using Imageverse.Application.Posts.Queries.GetPostsPerPage;
+using Imageverse.Contracts.Common;
 using Imageverse.Contracts.Post;
-using Imageverse.Domain.HashtagAggregate;
+using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Imageverse.Api.Controllers
 {
-    public class PostController : ApiController
+	public class PostController : ApiController
     {
         private readonly ISender _mediator;
         private readonly IMapper _mapper;
@@ -34,5 +38,48 @@ namespace Imageverse.Api.Controllers
                 errors => Problem(errors));
         }
 
-    }
+        [HttpGet]
+        public async Task<IActionResult> Get([Required] int page)
+        {
+            GetPostsPerPageQuery getPostsPerPageQuery = new GetPostsPerPageQuery(page);
+
+            ErrorOr<IEnumerable<PostResult>> result = await _mediator.Send(getPostsPerPageQuery);
+
+            return result.Match(
+                result => Ok(result.AsQueryable().ProjectToType<PostResponse>()),
+                errors => Problem(errors));
+        }
+
+        [HttpGet("{id}")]
+		public async Task<IActionResult> Get(string id)
+		{
+			ErrorOr<PostResult> result = await _mediator.Send(new GetPostByIdQuery(id));
+
+			return result.Match(
+				result => Ok(_mapper.Map<PostResponse>(result)),
+				errors => Problem(errors));
+		}
+
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> Delete(string id)
+		{
+			ErrorOr<bool> result = await _mediator.Send(new DeletePostCommand(id));
+
+			return result.Match(
+				result => Ok(new BoolResponse(result)),
+				errors => Problem(errors));
+		}
+
+		[HttpPut]
+		public async Task<IActionResult> UpdatePost(EditPostRequest editPostRequest)
+		{
+			EditPostCommand editPostCommand = _mapper.Map<EditPostCommand>(editPostRequest);
+
+			ErrorOr<PostResult> result = await _mediator.Send(editPostCommand);
+
+			return result.Match(
+				result => Ok(_mapper.Map<PostResponse>(result)),
+				errors => Problem(errors));
+		}
+	}
 }

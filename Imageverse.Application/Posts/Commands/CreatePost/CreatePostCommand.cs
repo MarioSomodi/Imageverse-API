@@ -2,7 +2,7 @@
 using Imageverse.Application.Posts.Common;
 using MediatR;
 
-namespace Imageverse.Application.Posts.Commands
+namespace Imageverse.Application.Posts.Commands.CreatePost
 {
     public record CreatePostCommand(
         string UserId,

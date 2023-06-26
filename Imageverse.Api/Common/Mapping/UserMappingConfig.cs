@@ -22,8 +22,9 @@ namespace Imageverse.Api.Common.Mapping
             config.NewConfig<UserIsAdminChangeRequest, UserIsAdminChangeCommand>();
 
             config.NewConfig<UserStatistics, UserStatisticsResponse>()
-                .Map(dest => dest.Id, src => src.Id.Value);
-            config.NewConfig<User, UserResponse>()
+                .Map(dest => dest.Id, src => src.Id.Value)
+                .Map(dest => dest.TotalMbUploaded, src => Math.Round(src.TotalMBUploaded,1));
+			config.NewConfig<User, UserResponse>()
                 .Map(dest => dest.Id, src => src.Id.Value)
                 .Map(dest => dest.PackageId, src => src.PackageId.Value)
                 .Map(dest => dest.ActivePackageId, src => src.GetUsersActivePackage(src).Value)

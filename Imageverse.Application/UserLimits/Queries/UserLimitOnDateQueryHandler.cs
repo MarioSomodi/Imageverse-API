@@ -35,7 +35,9 @@ namespace Imageverse.Application.UserLimits.Queries
             }
             
             if (await Task.Run(() => _unitOfWork.GetRepository<IUserLimitRepository>().GetUserLimitIfExistsForDate(onDate, user.UserLimitIds.ToList())) is not UserLimit userLimitOnDate){
-                return Errors.Common.NotFound(nameof(UserLimit));
+                userLimitOnDate = UserLimit.Create(0, 0, false);
+                await _unitOfWork.GetRepository<IUserLimitRepository>().AddAsync(userLimitOnDate);
+                await _unitOfWork.CommitAsync();
             }
             return userLimitOnDate;
         }

@@ -5,7 +5,7 @@ namespace Imageverse.Domain.UserAggregate.Entities
 {
     public sealed class UserStatistics : Entity<UserStatisticsId>
     {
-        public int TotalMBUploaded { get; private set; }
+        public double TotalMBUploaded { get; private set; }
         public int TotalImagesUploaded { get; private set; }
         public int TotalTimesUserRequestedPackageChange { get; private set; }
         public DateTime FirstLogin { get; private set; }
@@ -15,7 +15,7 @@ namespace Imageverse.Domain.UserAggregate.Entities
 
         private UserStatistics(
             UserStatisticsId userStatisticsId,
-            int totalMBUploaded,
+            double totalMBUploaded,
             int totalImagesUploaded,
             int totalTimesUserRequestedPackageChange,
             DateTime lastLogin,
@@ -34,7 +34,7 @@ namespace Imageverse.Domain.UserAggregate.Entities
         }
 
         public static UserStatistics Create(
-            int totalMBUploaded,
+            double totalMBUploaded,
             int totalImagesUploaded,
             int timesUserRequestedPackageChange,
             int timesLoggedIn,
@@ -50,7 +50,7 @@ namespace Imageverse.Domain.UserAggregate.Entities
                 timesLoggedIn,
                 totalTimesPostsWereEdited);
         }
-        public UserStatistics UpdateTotalMBUploaded(UserStatistics userStatisticsToUpdate, int totalMBUploaded)
+        public UserStatistics UpdateTotalMBUploaded(UserStatistics userStatisticsToUpdate, double totalMBUploaded)
         {
             userStatisticsToUpdate.TotalMBUploaded = totalMBUploaded;
             return userStatisticsToUpdate;

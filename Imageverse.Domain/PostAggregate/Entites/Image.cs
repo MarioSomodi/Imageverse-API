@@ -44,6 +44,13 @@ namespace Imageverse.Domain.PostAggregate.Entites
                 resolution,
                 format);
         }
+
+        public Image UpdateImageUrl(Image imageToUpdate, string url)
+        {
+            imageToUpdate.Url = url;
+            return imageToUpdate;
+        }
+
 #pragma warning disable CS8618
         private Image()
         {

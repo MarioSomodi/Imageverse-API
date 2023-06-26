@@ -63,8 +63,33 @@ namespace Imageverse.Domain.PostAggregate
             return postToUpdate;
         }
 
+        public Post UpdateImageUrl(Post postToUpdate, string url)
+        {
+            postToUpdate._images.First().UpdateImageUrl(postToUpdate._images.First(), url);
+            return postToUpdate;
+        }
+
+		public Post UpdateDescription(Post postToUpdate, string description)
+		{
+			postToUpdate.Description = description;
+			return postToUpdate;
+		}
+
+		public Post UpdateUpdatedAtDateTime(Post postToUpdate, DateTime UpdatedAtDateTime)
+		{
+			postToUpdate.UpdatedAtDateTime = UpdatedAtDateTime;
+			return postToUpdate;
+		}
+
+		public Post UpdateHashtagIds(Post postToUpdate, List<HashtagId> hashtagIds)
+		{
+            postToUpdate._hashtagIds.Clear();
+			postToUpdate._hashtagIds.AddRange(hashtagIds);
+			return postToUpdate;
+		}
+
 #pragma warning disable CS8618
-        private Post()
+		private Post()
         {
         }
 #pragma warning restore CS8618 

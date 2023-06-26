@@ -6,5 +6,6 @@ namespace Imageverse.Application.Posts.Common
     public record PostResult(
         Post Post,
         string Author,
+        string AuthorPhoto,
         IEnumerable<Hashtag> Hashtags);
 }
