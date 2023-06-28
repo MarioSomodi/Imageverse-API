@@ -1,10 +1,12 @@
 ﻿using Amazon.S3;
 using Imageverse.Application.Common.Interfaces;
 using Imageverse.Application.Common.Interfaces.Authentication;
+using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Infrastructure.Authentication;
 using Imageverse.Infrastructure.Persistance;
 using Imageverse.Infrastructure.Persistance.Interceptors;
+using Imageverse.Infrastructure.Persistance.Repositories;
 using Imageverse.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -33,11 +35,19 @@ namespace Imageverse.Infrastructure
         public static IServiceCollection AddPersistance(this IServiceCollection services, ConfigurationManager configuration)
         {
             services.AddScoped<PublishDomainEventsInterceptor>();
-                
-            services
-                .AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddDbContext<ImageverseDbContext>(options =>
+            services
+                .AddScoped<IUnitOfWork, UnitOfWork>()
+				.AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
+				.AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IHashtagRepository, HashtagRepository>()
+                .AddScoped<IUserLimitRepository, UserLimitRepository>()
+                .AddScoped<IUserActionLogRepository, UserActionLogRepository>()
+				.AddScoped<IPostRepository, PostRepository>()
+				.AddScoped<IUserActionRepository, UserActionRepository>()
+				.AddScoped<IPackageRepository, PackageRepository>();
+
+			services.AddDbContext<ImageverseDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("ImageverseDB")));
 
             return services;

@@ -119,7 +119,14 @@ namespace Imageverse.Domain.UserAggregate
             return user.PackageId;
         }
 
-        public User UpdateUsername(User userToUpdate, string username)
+        //Only for testing purposes do NOT use in code
+		public User UpdateId(User userToUpdate, UserId id)
+		{
+			userToUpdate.Id = id;
+			return userToUpdate;
+		}
+
+		public User UpdateUsername(User userToUpdate, string username)
         {
             userToUpdate.Username = username;
             return userToUpdate;

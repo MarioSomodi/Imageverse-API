@@ -1,5 +1,6 @@
 ﻿using Imageverse.Domain.Models;
 using Imageverse.Domain.PackageAggregate.ValueObjects;
+using Imageverse.Domain.UserAggregate.ValueObjects;
 
 namespace Imageverse.Domain.PackageAggregate
 {
@@ -52,8 +53,15 @@ namespace Imageverse.Domain.PackageAggregate
                 dailyImageUploadLimit);
         }
 
+        //Only for testing purposes do NOT use in code
+		public Package UpdateId(Package packageToUpdate, PackageId id)
+		{
+            packageToUpdate.Id = id;
+			return packageToUpdate;
+		}
+
 #pragma warning disable CS8618
-        private Package()
+		private Package()
         {
         }
 #pragma warning restore CS8618 

@@ -19,7 +19,7 @@ namespace Imageverse.Infrastructure
         {
             return await _dbContext.SaveChangesAsync() > 0;
         }
-
+        //Legacy should refactor
         public T GetRepository<T>() where T : class
         {
             Type typeApstraction = typeof(T);

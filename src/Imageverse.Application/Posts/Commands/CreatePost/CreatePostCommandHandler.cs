@@ -7,7 +7,6 @@ using Imageverse.Domain.Common.AppErrors;
 using Imageverse.Domain.Common.Utils;
 using Imageverse.Domain.HashtagAggregate;
 using Imageverse.Domain.PackageAggregate;
-using Imageverse.Domain.PackageAggregate.ValueObjects;
 using Imageverse.Domain.PostAggregate;
 using Imageverse.Domain.PostAggregate.Entites;
 using Imageverse.Domain.PostAggregate.Events;
@@ -16,45 +15,38 @@ using Imageverse.Domain.UserAggregate.ValueObjects;
 using Imageverse.Domain.UserLimitAggregate;
 using MediatR;
 using System.Drawing.Imaging;
-using System.Text.RegularExpressions;
 
 namespace Imageverse.Application.Posts.Commands.CreatePost
 {
-    public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, ErrorOr<PostResult>>
+	public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, ErrorOr<PostResult>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IAWSHelper _aWSHelper;
+		private readonly IUserRepository _userRepository;
+		private readonly IPackageRepository _packageRepository;
+		private readonly IUserLimitRepository _userLimitRepository;
+		private readonly IPostRepository _postRepository;
+		private readonly IHashtagRepository _hashtagRepository;
+		private readonly IAWSHelper _aWSHelper;
         private readonly IPublisher _publisher;
 
-        public CreatePostCommandHandler(IUnitOfWork unitOfWork, IAWSHelper aWSHelper, IPublisher publisher)
-        {
-            _unitOfWork = unitOfWork;
-            _aWSHelper = aWSHelper;
-            _publisher = publisher;
-        }
+		public CreatePostCommandHandler(IUnitOfWork unitOfWork, IAWSHelper aWSHelper, IPublisher publisher, IUserRepository userRepository, IPackageRepository packageRepository, IUserLimitRepository userLimitRepository, IPostRepository postRepository, IHashtagRepository hashtagRepository)
+		{
+			_unitOfWork = unitOfWork;
+			_aWSHelper = aWSHelper;
+			_publisher = publisher;
+			_userRepository = userRepository;
+			_packageRepository = packageRepository;
+			_userLimitRepository = userLimitRepository;
+			_postRepository = postRepository;
+			_hashtagRepository = hashtagRepository;
+		}
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		public async Task<ErrorOr<PostResult>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
-            if (!Regex.Match(request.Base64Image, "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$").Success)
-            {
-                return Errors.Common.BadRequest("Image needs to be encoded in a base64 string");
-            }
-            if (!Guid.TryParse(request.UserId, out var id))
-            {
-                return Errors.Common.BadRequest("Invalid Id format.");
-            }
-            if (await _unitOfWork.GetRepository<IUserRepository>().FindByIdAsync(UserId.Create(id)) is not User user)
-            {
-                return Errors.Common.NotFound(nameof(User));
-            }
-            PackageId currentPackageId = user.PackageId;
-            if (await _unitOfWork.GetRepository<IPackageRepository>().FindByIdAsync(currentPackageId) is not Package package)
-            {
-                return Errors.Common.NotFound(nameof(Package));
-            }
-
-            UserLimit? userLimitToday = _unitOfWork.GetRepository<IUserLimitRepository>().GetUserLimitIfExistsForDate(DateOnly.FromDateTime(DateTime.UtcNow), user.UserLimitIds.ToList());
+            User user = (await _userRepository.FindByIdAsync(UserId.Create(Guid.Parse(request.UserId))))!;
+            Package package = (await _packageRepository.FindByIdAsync(user.PackageId))!;
+            UserLimit? userLimitToday = _userLimitRepository.GetUserLimitIfExistsForDate(DateOnly.FromDateTime(DateTime.UtcNow), user.UserLimitIds.ToList());
 
             byte[] imageBytes = Convert.FromBase64String(request.Base64Image);
             double imageSizeInMB = 0;
@@ -107,10 +99,10 @@ namespace Imageverse.Application.Posts.Commands.CreatePost
 
             foreach (var hashtag in request.Hashtags)
             {
-                if (await _unitOfWork.GetRepository<IHashtagRepository>().GetSingleOrDefaultAsync(h => h.Name.Equals(hashtag)) is not Hashtag hashtagThatExists)
+                if (await _hashtagRepository.GetSingleOrDefaultAsync(h => h.Name.Equals(hashtag)) is not Hashtag hashtagThatExists)
                 {
                     Hashtag hashtagToAdd = Hashtag.Create(hashtag);
-                    await _unitOfWork.GetRepository<IHashtagRepository>().AddAsync(hashtagToAdd);
+                    await _hashtagRepository.AddAsync(hashtagToAdd);
                     hashtags.Add(hashtagToAdd);
                 }
                 else
@@ -141,7 +133,7 @@ namespace Imageverse.Application.Posts.Commands.CreatePost
                 hashtags
             );
 
-            await _unitOfWork.GetRepository<IPostRepository>().AddAsync(post);
+            await _postRepository.AddAsync(post);
 
             bool success = await _unitOfWork.CommitAsync();
             if (success) await _publisher.Publish(new PostCreated(user, hashtags, post, imageSizeInMB));
