@@ -32,6 +32,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{5B8650BC-BD58-4462-835E-67D117D218FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imageverse.Application.IntegrationTests", "tests\IntegrationTests\Imageverse.Application.IntegrationTests\Imageverse.Application.IntegrationTests.csproj", "{13E29C50-1E6F-462A-85A2-E8171E4CA400}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +66,10 @@ Global
 		{962F6B41-742A-4B04-A7C5-EF6B913CA303}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{962F6B41-742A-4B04-A7C5-EF6B913CA303}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{962F6B41-742A-4B04-A7C5-EF6B913CA303}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13E29C50-1E6F-462A-85A2-E8171E4CA400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13E29C50-1E6F-462A-85A2-E8171E4CA400}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13E29C50-1E6F-462A-85A2-E8171E4CA400}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13E29C50-1E6F-462A-85A2-E8171E4CA400}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +82,8 @@ Global
 		{8B543883-9367-456B-89AD-F5D829919707} = {8282130A-3F9E-4447-8596-BB8EDECFF797}
 		{CBD592FC-00EC-4150-940D-68F975A4392F} = {1C89147F-0EC8-4171-AB68-BDC1F0624F1E}
 		{962F6B41-742A-4B04-A7C5-EF6B913CA303} = {CBD592FC-00EC-4150-940D-68F975A4392F}
+		{5B8650BC-BD58-4462-835E-67D117D218FE} = {1C89147F-0EC8-4171-AB68-BDC1F0624F1E}
+		{13E29C50-1E6F-462A-85A2-E8171E4CA400} = {5B8650BC-BD58-4462-835E-67D117D218FE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4E165F90-9683-4033-B2C8-22B7FB738C6E}
