@@ -11,7 +11,7 @@ namespace Imageverse.Application.Posts.Commands.CreatePost
 		public CreatePostCommandValidator(IUserRepository userRepository)
 		{
 			_userRepository = userRepository;
-			RuleFor(cPC => cPC.UserId).Must(GuidValidator.ValidateGuid).WithMessage("User Id contains invalid Id forma, user id should be GUID.");
+			RuleFor(cPC => cPC.UserId).Must(GuidValidator.ValidateGuid).WithMessage("User Id contains invalid Id format, user id should be GUID.");
 			When(cPC => GuidValidator.ValidateGuid(cPC.UserId), () =>
 			{
 				RuleFor(mem => mem.UserId).MustAsync(async (entity, value, c) => await UserExistsValidator.Exists(_userRepository, value))

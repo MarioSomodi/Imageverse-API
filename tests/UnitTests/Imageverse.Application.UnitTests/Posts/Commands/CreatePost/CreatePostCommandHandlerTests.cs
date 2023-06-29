@@ -5,12 +5,8 @@ using Imageverse.Application.Common.Interfaces.Services;
 using Imageverse.Application.Posts.Commands.CreatePost;
 using Imageverse.Application.UnitTests.Posts.Commands.TestUtils;
 using Imageverse.Application.UnitTests.TestUtils.Constants;
+using Imageverse.Application.UnitTests.TestUtils.Mock;
 using Imageverse.Application.UnitTests.TestUtils.Posts.Extensions;
-using Imageverse.Domain.PackageAggregate;
-using Imageverse.Domain.PackageAggregate.ValueObjects;
-using Imageverse.Domain.UserAggregate;
-using Imageverse.Domain.UserAggregate.Entities;
-using Imageverse.Domain.UserAggregate.ValueObjects;
 using MediatR;
 using Moq;
 
@@ -31,11 +27,11 @@ namespace Imageverse.Application.UnitTests.Posts.Commands.CreatePost
 
 		public CreatePostCommandHandlerTests()
 		{
-			_mockIUnitOfWork = new();
+			_mockIUnitOfWork = MockIUnitOfWork.getMockIUnitOfWork();
 			_mockIAWSHelper = new();
 			_mockIPublisher = new();
-			_mockUserRepository = new();
-			_mockPackageRepository = new();
+			_mockUserRepository = Repositories.UserRepository.getMockUserRepository();
+			_mockPackageRepository = Repositories.PackageRepository.getMockPackageRepository();
 			_mockUserLimitRepository = new();
 			_mockPostRepository = new();
 			_mockHashtagRepository = new();
@@ -57,34 +53,6 @@ namespace Imageverse.Application.UnitTests.Posts.Commands.CreatePost
 		[MemberData(nameof(ValidCreatePostCommand))]
 		public async Task HandleCreatePostCommand_WhenPostIsValid_ShouldCreateAndReturnPost(CreatePostCommand createPostCommand)
 		{
-			_mockUserRepository.Setup(x => x.FindByIdAsync(It.IsAny<UserId>()))
-			 .ReturnsAsync((UserId userId) => { 
-					 var usr = User.Create(
-						 "username",
-						 "name",
-						 "surname",
-						 "email",
-						 "password",
-						 PackageId.CreateUnique(),
-						 UserStatistics.Create(1, 1, 1, 0, 1),
-						 new byte[0],
-						 "refreshToken",
-						 "profileImage",
-						 DateTime.UtcNow,
-						 "0",
-						 1);
-					 return usr.UpdateId(usr, userId);
-				 }
-			 );
-
-			_mockPackageRepository.Setup(x => x.FindByIdAsync(It.IsAny<PackageId>()))
-			 .ReturnsAsync((PackageId packageId) =>
-			 {
-				 var package = Package.Create("name", 1, 1, 1, 1);
-				 return package.UpdateId(package, packageId);
-			 }
-			 );
-
 			var result = await _handler.Handle(createPostCommand, default);
 
 			result.IsError.Should().BeFalse();
@@ -92,6 +60,7 @@ namespace Imageverse.Application.UnitTests.Posts.Commands.CreatePost
 			result.Value.ValidateCreatedFrom(createPostCommand);
 
 			_mockPostRepository.Verify(m => m.AddAsync(result.Value.Post), Times.Once);
+			_mockIUnitOfWork.Verify(m => m.CommitAsync(), Times.Once);
 		}
 
 		public static IEnumerable<object[]> ValidCreatePostCommand()

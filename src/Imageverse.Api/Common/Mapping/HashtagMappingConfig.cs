@@ -1,4 +1,4 @@
-﻿using Imageverse.Application.Hashtags.Commands;
+﻿using Imageverse.Application.Hashtags.Commands.PostHashtag;
 using Imageverse.Contracts.Hashtag;
 using Imageverse.Domain.HashtagAggregate;
 using Mapster;

@@ -1,6 +1,5 @@
 ﻿using Imageverse.Application.Posts.Commands.CreatePost;
 using Imageverse.Application.UnitTests.TestUtils.Constants;
-using System.Linq.Expressions;
 
 namespace Imageverse.Application.UnitTests.Posts.Commands.TestUtils
 {

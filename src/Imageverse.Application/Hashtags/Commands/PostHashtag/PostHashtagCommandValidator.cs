@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Imageverse.Application.Hashtags.Commands
+namespace Imageverse.Application.Hashtags.Commands.PostHashtag
 {
     public class PostHashtagCommandValidator : AbstractValidator<PostHashtagCommand>
     {

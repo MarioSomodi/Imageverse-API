@@ -1,5 +1,5 @@
 ﻿using ErrorOr;
-using Imageverse.Application.Hashtags.Commands;
+using Imageverse.Application.Hashtags.Commands.PostHashtag;
 using Imageverse.Application.Hashtags.Queries;
 using Imageverse.Contracts.Hashtag;
 using Imageverse.Domain.HashtagAggregate;

@@ -69,6 +69,13 @@ namespace Imageverse.Domain.PostAggregate
             return postToUpdate;
         }
 
+        //Only use in testing purposes do NOT use in code
+		public Post UpdateId(Post postToUpdate, PostId id)
+		{
+			postToUpdate.Id = id;
+			return postToUpdate;
+		}
+
 		public Post UpdateDescription(Post postToUpdate, string description)
 		{
 			postToUpdate.Description = description;

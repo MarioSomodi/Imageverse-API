@@ -2,7 +2,6 @@
 using Imageverse.Application.Common.Interfaces;
 using Imageverse.Application.Common.Interfaces.Persistance;
 using Imageverse.Application.Common.Interfaces.Services;
-using Imageverse.Domain.Common.AppErrors;
 using Imageverse.Domain.PostAggregate;
 using Imageverse.Domain.PostAggregate.ValueObjects;
 using Imageverse.Domain.UserAggregate;
@@ -14,28 +13,25 @@ namespace Imageverse.Application.Posts.Commands.DeletePost
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IAWSHelper _aWSHelper;
+		private readonly IPostRepository _postRepository;
+		private readonly IUserRepository _userRepository;
 
-		public DeletePostCommandHandler(IUnitOfWork unitOfWork, IAWSHelper aWSHelper)
+		public DeletePostCommandHandler(IUnitOfWork unitOfWork, IAWSHelper aWSHelper, IPostRepository postRepository, IUserRepository userRepository)
 		{
 			_unitOfWork = unitOfWork;
 			_aWSHelper = aWSHelper;
+			_postRepository = postRepository;
+			_userRepository = userRepository;
 		}
 
 		public async Task<ErrorOr<bool>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
 		{
-			if (!Guid.TryParse(request.Id, out var id))
-			{
-				return Errors.Common.BadRequest("Invalid Id format.");
-			}
-			if (await _unitOfWork.GetRepository<IPostRepository>().FindByIdAsync(PostId.Create(id)) is not Post post)
-			{
-				return Errors.Common.NotFound(nameof(Post));
-			}
+			Post post = (await _postRepository.FindByIdAsync(PostId.Create(Guid.Parse(request.Id))))!;
 
-			User user = (await _unitOfWork.GetRepository<IUserRepository>().FindByIdAsync(post.UserId))!;
+			User user = (await _userRepository.FindByIdAsync(post.UserId))!;
 
 			await _aWSHelper.DeleteFileAsync($"posts/{user?.Id.Value}/{post.Images.First().Name}.{post.Images.First().Format}");
-			_unitOfWork.GetRepository<IPostRepository>().Delete(post);
+			_postRepository.Delete(post);
 			var success = await _unitOfWork.CommitAsync();
 			return success;
 		}

@@ -1,9 +1,7 @@
 ﻿using FluentAssertions;
 using Imageverse.Application.Posts.Commands.CreatePost;
 using Imageverse.Application.Posts.Common;
-using Imageverse.Domain.HashtagAggregate;
 using Imageverse.Domain.PostAggregate;
-using Imageverse.Domain.PostAggregate.Entites;
 
 namespace Imageverse.Application.UnitTests.TestUtils.Posts.Extensions
 {

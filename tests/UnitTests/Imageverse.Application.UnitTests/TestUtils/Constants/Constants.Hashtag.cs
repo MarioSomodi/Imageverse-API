@@ -2,9 +2,9 @@
 {
 	public static partial class Constants
 	{
-		public static class User
+		public static class Hashtag
 		{
-			public const string UserId = "7638542C-451A-4DAB-BB0F-12E53E72E940";
+			public static readonly List<string> Hashtags = new() { "Test1", "Test2", "Test3" };
 		}
 	}
 }
