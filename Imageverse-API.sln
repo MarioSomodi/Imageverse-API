@@ -1,0 +1,91 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8282130A-3F9E-4447-8596-BB8EDECFF797}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imageverse.Api", "src\Imageverse.Api\Imageverse.Api.csproj", "{8AD6BE1D-F225-4C2B-BB9B-8079281619EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imageverse.Application", "src\Imageverse.Application\Imageverse.Application.csproj", "{52064EAA-F4AB-4491-8840-23129C2C9FAD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imageverse.Contracts", "src\Imageverse.Contracts\Imageverse.Contracts.csproj", "{EBF96733-E63A-4E1A-80D3-24F6612F31EC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imageverse.Domain", "src\Imageverse.Domain\Imageverse.Domain.csproj", "{2606E6D5-6D09-4846-887D-98B4B478CF08}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imageverse.Infrastructure", "src\Imageverse.Infrastructure\Imageverse.Infrastructure.csproj", "{8B543883-9367-456B-89AD-F5D829919707}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1C89147F-0EC8-4171-AB68-BDC1F0624F1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{CBD592FC-00EC-4150-940D-68F975A4392F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imageverse.Application.UnitTests", "tests\UnitTests\Imageverse.Application.UnitTests\Imageverse.Application.UnitTests.csproj", "{962F6B41-742A-4B04-A7C5-EF6B913CA303}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{7B5E38D9-E826-4071-A56F-8F44F7E1C5FA}"
+	ProjectSection(SolutionItems) = preProject
+		Scripts\InitialPackagesData.sql = Scripts\InitialPackagesData.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9CD5A138-168B-40DF-8335-4C765836B8A6}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{5B8650BC-BD58-4462-835E-67D117D218FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imageverse.Application.IntegrationTests", "tests\IntegrationTests\Imageverse.Application.IntegrationTests\Imageverse.Application.IntegrationTests.csproj", "{13E29C50-1E6F-462A-85A2-E8171E4CA400}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8AD6BE1D-F225-4C2B-BB9B-8079281619EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AD6BE1D-F225-4C2B-BB9B-8079281619EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AD6BE1D-F225-4C2B-BB9B-8079281619EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AD6BE1D-F225-4C2B-BB9B-8079281619EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52064EAA-F4AB-4491-8840-23129C2C9FAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52064EAA-F4AB-4491-8840-23129C2C9FAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52064EAA-F4AB-4491-8840-23129C2C9FAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52064EAA-F4AB-4491-8840-23129C2C9FAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBF96733-E63A-4E1A-80D3-24F6612F31EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBF96733-E63A-4E1A-80D3-24F6612F31EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBF96733-E63A-4E1A-80D3-24F6612F31EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBF96733-E63A-4E1A-80D3-24F6612F31EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2606E6D5-6D09-4846-887D-98B4B478CF08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2606E6D5-6D09-4846-887D-98B4B478CF08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2606E6D5-6D09-4846-887D-98B4B478CF08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2606E6D5-6D09-4846-887D-98B4B478CF08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B543883-9367-456B-89AD-F5D829919707}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B543883-9367-456B-89AD-F5D829919707}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B543883-9367-456B-89AD-F5D829919707}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B543883-9367-456B-89AD-F5D829919707}.Release|Any CPU.Build.0 = Release|Any CPU
+		{962F6B41-742A-4B04-A7C5-EF6B913CA303}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{962F6B41-742A-4B04-A7C5-EF6B913CA303}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{962F6B41-742A-4B04-A7C5-EF6B913CA303}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{962F6B41-742A-4B04-A7C5-EF6B913CA303}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13E29C50-1E6F-462A-85A2-E8171E4CA400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13E29C50-1E6F-462A-85A2-E8171E4CA400}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13E29C50-1E6F-462A-85A2-E8171E4CA400}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13E29C50-1E6F-462A-85A2-E8171E4CA400}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8AD6BE1D-F225-4C2B-BB9B-8079281619EE} = {8282130A-3F9E-4447-8596-BB8EDECFF797}
+		{52064EAA-F4AB-4491-8840-23129C2C9FAD} = {8282130A-3F9E-4447-8596-BB8EDECFF797}
+		{EBF96733-E63A-4E1A-80D3-24F6612F31EC} = {8282130A-3F9E-4447-8596-BB8EDECFF797}
+		{2606E6D5-6D09-4846-887D-98B4B478CF08} = {8282130A-3F9E-4447-8596-BB8EDECFF797}
+		{8B543883-9367-456B-89AD-F5D829919707} = {8282130A-3F9E-4447-8596-BB8EDECFF797}
+		{CBD592FC-00EC-4150-940D-68F975A4392F} = {1C89147F-0EC8-4171-AB68-BDC1F0624F1E}
+		{962F6B41-742A-4B04-A7C5-EF6B913CA303} = {CBD592FC-00EC-4150-940D-68F975A4392F}
+		{5B8650BC-BD58-4462-835E-67D117D218FE} = {1C89147F-0EC8-4171-AB68-BDC1F0624F1E}
+		{13E29C50-1E6F-462A-85A2-E8171E4CA400} = {5B8650BC-BD58-4462-835E-67D117D218FE}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4E165F90-9683-4033-B2C8-22B7FB738C6E}
+	EndGlobalSection
+EndGlobal
