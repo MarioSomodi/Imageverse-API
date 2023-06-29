@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Imageverse.Api.Common.Aspects;
 using Imageverse.Application.Hashtags.Commands.PostHashtag;
 using Imageverse.Application.Hashtags.Queries;
 using Imageverse.Contracts.Hashtag;
@@ -10,7 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Imageverse.Api.Controllers
 {
-    public class HashtagController : ApiController
+	[LogToFile]
+	public class HashtagController : ApiController
     {
         private readonly ISender _mediator;
         private readonly IMapper _mapper;

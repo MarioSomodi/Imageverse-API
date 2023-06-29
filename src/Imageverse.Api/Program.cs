@@ -1,3 +1,4 @@
+using Imageverse.Api.Common.Aspects;
 using Imageverse.Application;
 using Imageverse.Infrastructure;
 

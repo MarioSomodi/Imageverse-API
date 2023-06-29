@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Imageverse.Api.Common.Aspects;
 using Imageverse.Application.Authentication.Commands.Register;
 using Imageverse.Application.Authentication.Commands.RevokeRefreshToken;
 using Imageverse.Application.Authentication.Common;
@@ -17,7 +18,8 @@ namespace Imageverse.Api.Controllers
 {
     [AllowAnonymous]
     [Route("[controller]/[action]")]
-    public class AuthenticationController : ApiController
+	[LogToFile]
+	public class AuthenticationController : ApiController
     {
         private readonly ISender _mediator;
         private readonly IMapper _mapper;

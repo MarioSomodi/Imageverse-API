@@ -1,5 +1,6 @@
 ﻿using Azure;
 using ErrorOr;
+using Imageverse.Api.Common.Aspects;
 using Imageverse.Application.UserLimits.Queries;
 using Imageverse.Contracts.UserLimits;
 using Imageverse.Domain.UserLimitAggregate;
@@ -9,7 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Imageverse.Api.Controllers
 {
-    public class UserLimitController : ApiController
+	[LogToFile]
+	public class UserLimitController : ApiController
     {
         private readonly ISender _mediator;
         private readonly IMapper _mapper;

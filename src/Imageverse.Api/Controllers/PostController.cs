@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Imageverse.Api.Common.Aspects;
 using Imageverse.Application.Posts.Commands.CreatePost;
 using Imageverse.Application.Posts.Commands.DeletePost;
 using Imageverse.Application.Posts.Commands.EditPost;
@@ -15,6 +16,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Imageverse.Api.Controllers
 {
+	[LogToFile]
 	public class PostController : ApiController
     {
         private readonly ISender _mediator;

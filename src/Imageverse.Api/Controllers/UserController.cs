@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Imageverse.Api.Common.Aspects;
 using Imageverse.Application.Users.Commands.UserEmailUpdate;
 using Imageverse.Application.Users.Commands.UserInfoUpdate;
 using Imageverse.Application.Users.Commands.UserIsAdminChange;
@@ -18,7 +19,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Imageverse.Api.Controllers
 {
-    public class UserController : ApiController
+	[LogToFile]
+	public class UserController : ApiController
     {
 
         private readonly ISender _mediator;

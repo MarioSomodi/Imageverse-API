@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Imageverse.Api.Common.Aspects;
 using Imageverse.Application.Packages.Commands.CreatePackage;
 using Imageverse.Application.Packages.Queries.GetAllPackages;
 using Imageverse.Application.Packages.Queries.GetPackageById;
@@ -13,7 +14,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Imageverse.Api.Controllers
 {
-    public class PackageController : ApiController
+	[LogToFile]
+	public class PackageController : ApiController
     {
 
         private readonly ISender _mediator;

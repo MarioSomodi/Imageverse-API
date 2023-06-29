@@ -1,15 +1,15 @@
 ﻿using ErrorOr;
+using Imageverse.Api.Common.Aspects;
 using Imageverse.Api.Common.Http;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Imageverse.Api.Controllers
 {
-    [Authorize]
+	[Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class ApiController : ControllerBase
+	public class ApiController : ControllerBase
     {
         [ApiExplorerSettings(IgnoreApi = true)]
         protected IActionResult Problem(List<Error> errors)
