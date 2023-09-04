@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  imageverse.api:
+    image: ${DOCKER_REGISTRY-}imageverseapi
+    build:
+      context: .
+      dockerfile: src/Imageverse.Api/Dockerfile

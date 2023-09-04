@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  imageverse.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "80"
+      - "8000:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  prometheus:
+    build:
+      context: .
+      dockerfile: dockerfile-prometheus.yml
+    ports:
+      - "9090:9090"
+    configs:
+      - prometheus_config
+    depends_on:
+      - imageverse.api
+  grafana:
+    image: grafana/grafana-enterprise
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+configs:
+  prometheus_config:
+    file: ./etc/prometheus/prometheus.yml

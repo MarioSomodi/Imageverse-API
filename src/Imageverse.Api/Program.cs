@@ -1,6 +1,7 @@
 using Imageverse.Api.Common.Aspects;
 using Imageverse.Application;
 using Imageverse.Infrastructure;
+using Prometheus;
 
 namespace Imageverse.Api
 {
@@ -18,6 +19,7 @@ namespace Imageverse.Api
 
             var app = builder.Build();
             {
+                app.UseMetricsAllMiddleware();
                 app.UseAuthentication();
                 app.UseAuthorization();
                 if (app.Environment.IsDevelopment())
@@ -31,6 +33,8 @@ namespace Imageverse.Api
                     app.UseExceptionHandler("/Error");
                 }
                 app.UseHttpsRedirection();
+                app.UseHttpMetrics();
+                app.MapMetrics();
                 app.MapControllers();
                 app.Run();
             }

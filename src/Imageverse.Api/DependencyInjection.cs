@@ -1,4 +1,6 @@
-﻿using Imageverse.Api.Common.Errors;
+﻿using App.Metrics;
+using App.Metrics.Formatters.Prometheus;
+using Imageverse.Api.Common.Errors;
 using Imageverse.Api.Common.Mapping;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.OpenApi.Models;
@@ -12,6 +14,7 @@ namespace Imageverse.Api
         {
             services.AddControllers();
             services.AddSwagger();
+            services.AddMetricsAndPrometheus();
 
             services.AddMappings();
             
@@ -52,6 +55,13 @@ namespace Imageverse.Api
                 });
             });
 
+            return services;
+        }
+
+        public static IServiceCollection AddMetricsAndPrometheus(this IServiceCollection services)
+        {
+            services.AddMetrics()
+                    .AddMetricsTrackingMiddleware();
             return services;
         }
     }
